@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.wt.husky.redis.config.RedisConfig,\
+  com.wt.husky.redis.util.RedisUtil
+

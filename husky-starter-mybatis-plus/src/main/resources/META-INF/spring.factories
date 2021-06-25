@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.wt.husky.mybatis.plus.config.MybatisPlusConfig
+
+
+
