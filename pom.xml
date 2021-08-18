@@ -20,6 +20,7 @@
         <module>husky-starter-openfeign</module>
         <module>husky-starter-redis</module>
         <module>husky-starter-rocketmq</module>
+        <module>husky-starter-json</module>
     </modules>
 
     <properties>
@@ -125,6 +126,12 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-extension</artifactId>
                 <version>3.4.3.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-json</artifactId>
+                <version>${springboot.version}</version>
             </dependency>
 
         </dependencies>

@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Import;
 @EnableFeignClients("${feign.basePackages}")
 @Import(FeignClientsConfiguration.class)
 @Configuration
-public class OpenPlatformFeignConfig {
+public class FeignConfig {
     @Bean
     public Contract feignContract() {
         return new feign.Contract.Default();

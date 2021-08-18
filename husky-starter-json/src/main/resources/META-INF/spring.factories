@@ -1,3 +1,6 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.wt.husky.feign.config.FeignConfig
+  com.wt.husky.json.JsonUtil
+
+
+
 
