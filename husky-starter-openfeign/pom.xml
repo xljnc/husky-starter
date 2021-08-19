@@ -26,6 +26,12 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-ribbon -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/io.github.openfeign/feign-okhttp -->
         <dependency>
             <groupId>io.github.openfeign</groupId>
