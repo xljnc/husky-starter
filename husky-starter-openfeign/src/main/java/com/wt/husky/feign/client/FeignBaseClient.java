@@ -1,6 +1,6 @@
 package com.wt.husky.feign.client;
 
-import com.wt.husky.feign.config.FeignConfig;
+import com.wt.husky.feign.config.FeignHttpConfig;
 import feign.Headers;
 import feign.RequestLine;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -11,7 +11,7 @@ import java.net.URI;
  * @author 一贫
  * @date 2021/8/18
  */
-@FeignClient(name = "base", configuration = FeignConfig.class)
+@FeignClient(name = "base", configuration = FeignHttpConfig.class)
 public interface FeignBaseClient {
 
     @RequestLine("POST")

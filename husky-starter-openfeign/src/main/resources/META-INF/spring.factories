@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.wt.husky.feign.config.FeignConfig
+  com.wt.husky.feign.config.FeignHttpConfig,\
+   com.wt.husky.feign.config.FeignMvcConfig
 
