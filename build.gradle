@@ -1,0 +1,37 @@
+buildscript {
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.6.2"
+        classpath "com.wt.test:gradle-springboot-plugin:1.0.0-SNAPSHOT"
+    }
+}
+
+group 'com.wt.test'
+version '1.0.0-SNAPSHOT'
+
+ext {
+    springbootVersion = '2.6.2'
+    sourceCompatibility = 11
+    jarArchiveClassifier = ''
+    sourceJarArchiveClassifier = 'sources'
+}
+
+apply plugin: "qiyuSpringBootPlugin"
+
+subprojects {
+    dependencyManagement {
+        dependencies {
+            dependency group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+            dependency group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+            dependency 'org.hibernate.validator:hibernate-validator:6.2.1.Final'
+            dependency 'com.baomidou:mybatis-plus-boot-starter:3.4.3.4'
+            dependency 'org.apache.rocketmq:rocketmq-spring-boot-starter:2.2.1'
+            dependency 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.0'
+            dependency 'io.github.openfeign:feign-okhttp:11.8'
+            dependency 'mysql:mysql-connector-java:8.0.27'
+            dependency 'com.baomidou:mybatis-plus-extension:3.4.3.4'
+        }
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:${rootProject.ext.springbootVersion}"
+        }
+    }
+}
