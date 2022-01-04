@@ -1,0 +1,7 @@
+dependencies {
+    implementation 'com.alibaba.nacos:nacos-client'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+}
+
+description = 'husky-starter-mybatis-plus'
