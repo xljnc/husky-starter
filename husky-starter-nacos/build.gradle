@@ -4,4 +4,4 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-autoconfigure'
 }
 
-description = 'husky-starter-mybatis-plus'
+description = 'husky-starter-nacos'
