@@ -5,5 +5,5 @@ include(':husky-starter-mybatis-plus')
 include(':husky-starter-json')
 include(':husky-starter-redis')
 include(':husky-starter-openfeign')
-include 'husky-starter-nacos'
+include(':husky-starter-config-center')
 

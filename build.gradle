@@ -1,4 +1,9 @@
 buildscript {
+    repositories {
+        mavenLocal()
+        maven { name "Alibaba"; url "https://maven.aliyun.com/repository/public" }
+        mavenCentral()
+    }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.6.2"
         classpath "com.wt.test:gradle-springboot-plugin:1.0.0-SNAPSHOT"

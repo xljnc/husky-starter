@@ -2,6 +2,9 @@ dependencies {
     implementation 'com.alibaba.nacos:nacos-client'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 }
 
-description = 'husky-starter-nacos'
+description = 'husky-starter-config-center'
