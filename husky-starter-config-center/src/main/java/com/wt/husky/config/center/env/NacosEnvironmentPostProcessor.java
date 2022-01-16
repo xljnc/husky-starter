@@ -4,6 +4,7 @@ import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.PropertyKeyConst;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.exception.NacosException;
+import com.wt.husky.config.center.util.YamlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -31,6 +32,10 @@ public class NacosEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
     private final String CONFIG_DEFAULT_GROUP = "DEFAULT_GROUP";
     private final String CONFIG_DEFAULT_NAMESPACE = "public";
+    private final String CONFIG_DEFAULT_USERNAME = "nacos";
+    private final String CONFIG_DEFAULT_PASSWORD = "nacos";
+    private final String CONFIG_DEFAULT_EXT = "yaml";
+
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
@@ -40,9 +45,17 @@ public class NacosEnvironmentPostProcessor implements EnvironmentPostProcessor {
         String namespace = environment.getProperty("config.center.namespace");
         if (!StringUtils.hasText(namespace))
             namespace = CONFIG_DEFAULT_NAMESPACE;
+        String username = environment.getProperty("config.center.username");
+        if (!StringUtils.hasText(username))
+            username = CONFIG_DEFAULT_USERNAME;
+        String password = environment.getProperty("config.center.password");
+        if (!StringUtils.hasText(password))
+            password = CONFIG_DEFAULT_PASSWORD;
         Properties configCenterProperties = new Properties();
         configCenterProperties.put(PropertyKeyConst.SERVER_ADDR, serverAddr);
         configCenterProperties.put(PropertyKeyConst.NAMESPACE, namespace);
+        configCenterProperties.put(PropertyKeyConst.USERNAME, username);
+        configCenterProperties.put(PropertyKeyConst.PASSWORD, password);
         ConfigService configService = null;
         try {
             configService = NacosFactory.createConfigService(configCenterProperties);
@@ -67,13 +80,21 @@ public class NacosEnvironmentPostProcessor implements EnvironmentPostProcessor {
             throw new RuntimeException("连接配置失败");
         }
         if (StringUtils.hasText(content)) {
-            Properties config = new Properties();
-            try {
-                config.load(new StringReader(content));
-                log.info("读取配置内容:{}", content);
-            } catch (IOException e) {
-                log.error("配置有误，请检查。内容:{}", content, e);
-                throw new RuntimeException("连接配置失败");
+            String ext = environment.getProperty("config.center.ext");
+            if (!StringUtils.hasText(ext))
+                ext = CONFIG_DEFAULT_EXT;
+            Properties config = null;
+            if (ext.equals(CONFIG_DEFAULT_EXT)) {
+                config = YamlUtil.loadToProperties(content);
+            } else {
+                config = new Properties();
+                try {
+                    config.load(new StringReader(content));
+                    log.info("读取配置内容:{}", content);
+                } catch (IOException e) {
+                    log.error("配置有误，请检查。内容:{}", content, e);
+                    throw new RuntimeException("连接配置失败");
+                }
             }
             PropertiesPropertySource propertySource = new PropertiesPropertySource("config-center", config);
             environment.getPropertySources().addFirst(propertySource);
