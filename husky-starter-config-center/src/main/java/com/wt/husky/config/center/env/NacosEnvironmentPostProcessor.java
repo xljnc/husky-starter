@@ -1,6 +1,7 @@
 package com.wt.husky.config.center.env;
 
 import com.alibaba.nacos.api.NacosFactory;
+import com.alibaba.nacos.api.PropertyKeyConst;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.exception.NacosException;
 import lombok.extern.slf4j.Slf4j;
@@ -29,14 +30,19 @@ import java.util.Properties;
 public class NacosEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
     private final String CONFIG_DEFAULT_GROUP = "DEFAULT_GROUP";
+    private final String CONFIG_DEFAULT_NAMESPACE = "public";
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         String serverAddr = environment.getProperty("config.center.server.addr");
         if (!StringUtils.hasText(serverAddr))
             throw new RuntimeException("请指定正确的配置中心地址!");
+        String namespace = environment.getProperty("config.center.namespace");
+        if (!StringUtils.hasText(namespace))
+            namespace = CONFIG_DEFAULT_NAMESPACE;
         Properties configCenterProperties = new Properties();
-        configCenterProperties.put("serverAddr", serverAddr);
+        configCenterProperties.put(PropertyKeyConst.SERVER_ADDR, serverAddr);
+        configCenterProperties.put(PropertyKeyConst.NAMESPACE, namespace);
         ConfigService configService = null;
         try {
             configService = NacosFactory.createConfigService(configCenterProperties);
@@ -51,9 +57,8 @@ public class NacosEnvironmentPostProcessor implements EnvironmentPostProcessor {
                 throw new RuntimeException("请指定正确的dataId!");
         }
         String group = environment.getProperty("config.center.group");
-        if (!StringUtils.hasText(group)) {
+        if (!StringUtils.hasText(group))
             group = CONFIG_DEFAULT_GROUP;
-        }
         String content = null;
         try {
             content = configService.getConfig(dataId, group, 5000);
@@ -65,7 +70,7 @@ public class NacosEnvironmentPostProcessor implements EnvironmentPostProcessor {
             Properties config = new Properties();
             try {
                 config.load(new StringReader(content));
-                log.info("读取配置内容:{}",content);
+                log.info("读取配置内容:{}", content);
             } catch (IOException e) {
                 log.error("配置有误，请检查。内容:{}", content, e);
                 throw new RuntimeException("连接配置失败");
