@@ -26,7 +26,6 @@ import java.util.Properties;
  * @date 2022/1/15
  */
 @Order(Ordered.LOWEST_PRECEDENCE)
-@ConditionalOnProperty(value = "config.center.enable", havingValue = "true", matchIfMissing = true)
 @Slf4j
 public class NacosEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
@@ -39,6 +38,9 @@ public class NacosEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+        String remoteConfigEnabled = environment.getProperty("config.center.enable");
+        if (StringUtils.hasText(remoteConfigEnabled) && remoteConfigEnabled.equals("false"))
+            throw new RuntimeException("禁用配置中心,使用本地配置!");
         String serverAddr = environment.getProperty("config.center.server.addr");
         if (!StringUtils.hasText(serverAddr))
             throw new RuntimeException("请指定正确的配置中心地址!");
@@ -98,6 +100,8 @@ public class NacosEnvironmentPostProcessor implements EnvironmentPostProcessor {
             }
             PropertiesPropertySource propertySource = new PropertiesPropertySource("config-center", config);
             environment.getPropertySources().addFirst(propertySource);
+        } else {
+            log.warn("配置为空,使用本地配置,dataId:{},group:{}", dataId, group);
         }
 
     }
