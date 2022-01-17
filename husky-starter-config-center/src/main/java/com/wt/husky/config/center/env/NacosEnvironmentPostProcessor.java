@@ -7,7 +7,6 @@ import com.alibaba.nacos.api.exception.NacosException;
 import com.wt.husky.config.center.util.YamlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -39,11 +38,15 @@ public class NacosEnvironmentPostProcessor implements EnvironmentPostProcessor {
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         String remoteConfigEnabled = environment.getProperty("config.center.enable");
-        if (StringUtils.hasText(remoteConfigEnabled) && remoteConfigEnabled.equals("false"))
-            throw new RuntimeException("禁用配置中心,使用本地配置!");
+        if (StringUtils.hasText(remoteConfigEnabled) && remoteConfigEnabled.equals("false")) {
+            log.info("禁用配置中心,使用本地配置!");
+            return;
+        }
         String serverAddr = environment.getProperty("config.center.server.addr");
-        if (!StringUtils.hasText(serverAddr))
+        if (!StringUtils.hasText(serverAddr)) {
+            log.error("请指定正确的配置中心地址,当前地址:{}", serverAddr);
             throw new RuntimeException("请指定正确的配置中心地址!");
+        }
         String namespace = environment.getProperty("config.center.namespace");
         if (!StringUtils.hasText(namespace))
             namespace = CONFIG_DEFAULT_NAMESPACE;
