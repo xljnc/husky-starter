@@ -34,7 +34,7 @@ allprojects {
             dependency 'io.github.openfeign:feign-okhttp:11.8'
             dependency 'mysql:mysql-connector-java:8.0.27'
             dependency 'com.alibaba.nacos:nacos-client:2.0.3'
-//            dependency 'org.apache.dubbo:dubbo-spring-boot-starter:2.7.15'
+            dependency 'org.apache.dubbo:dubbo-spring-boot-starter:2.7.15'
             dependency 'org.apache.dubbo:dubbo:3.0.5'
         }
         imports {

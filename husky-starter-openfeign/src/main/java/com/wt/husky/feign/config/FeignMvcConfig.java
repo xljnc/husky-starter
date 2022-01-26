@@ -13,8 +13,6 @@ import org.springframework.context.annotation.Import;
  * @author 一贫
  * @date 2021/1/4
  */
-@EnableFeignClients("${feign.basePackages}")
-@Import(FeignClientsConfiguration.class)
 @Configuration
 public class FeignMvcConfig {
     
