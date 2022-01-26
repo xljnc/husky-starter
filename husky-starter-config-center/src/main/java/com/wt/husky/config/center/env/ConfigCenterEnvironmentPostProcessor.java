@@ -19,14 +19,14 @@ import java.io.StringReader;
 import java.util.Properties;
 
 /**
- * 从nacos中获取配置
+ * 从Nacos中获取配置
  *
  * @author qiyu
  * @date 2022/1/15
  */
 @Order(Ordered.LOWEST_PRECEDENCE)
 @Slf4j
-public class NacosEnvironmentPostProcessor implements EnvironmentPostProcessor {
+public class ConfigCenterEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
     private final String CONFIG_DEFAULT_GROUP = "DEFAULT_GROUP";
     private final String CONFIG_DEFAULT_NAMESPACE = "public";
