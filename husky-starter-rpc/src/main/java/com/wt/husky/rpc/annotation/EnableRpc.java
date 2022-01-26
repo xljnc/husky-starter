@@ -1,5 +1,6 @@
 package com.wt.husky.rpc.annotation;
 
+import com.wt.husky.rpc.config.RpcProviderRegistrar;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AliasFor;
 
@@ -14,7 +15,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-@Import()
+@Import(RpcProviderRegistrar.class)
 public @interface EnableRpc {
 
     @AliasFor("basePackages")
