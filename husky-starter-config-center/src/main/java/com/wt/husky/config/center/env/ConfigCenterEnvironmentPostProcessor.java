@@ -37,8 +37,8 @@ public class ConfigCenterEnvironmentPostProcessor implements EnvironmentPostProc
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        String remoteConfigEnabled = environment.getProperty("config.center.enable");
-        if (StringUtils.hasText(remoteConfigEnabled) && remoteConfigEnabled.equals("false")) {
+        Boolean remoteConfigEnabled = environment.getProperty("config.center.enable", Boolean.class, Boolean.TRUE);
+        if (!remoteConfigEnabled) {
             log.info("禁用配置中心,使用本地配置!");
             return;
         }

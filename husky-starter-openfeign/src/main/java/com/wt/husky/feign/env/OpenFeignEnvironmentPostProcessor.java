@@ -6,6 +6,9 @@ import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.PropertiesPropertySource;
+
+import java.util.Properties;
 
 /**
  * 从Nacos中获取配置
@@ -17,10 +20,20 @@ import org.springframework.core.env.ConfigurableEnvironment;
 @Slf4j
 public class OpenFeignEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
-
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        String remoteConfigEnabled = environment.getProperty("config.center.enable");
-
+        Properties feignProperties = new Properties();
+        //开启okhttp，禁用httpclient
+        feignProperties.put("feign.okhttp.enabled", Boolean.TRUE);
+        feignProperties.put("feign.httpclient.enabled", Boolean.FALSE);
+        //开启压缩
+        feignProperties.put("feign.compression.request.enabled", Boolean.TRUE);
+        feignProperties.put("feign.compression.response.enabled", Boolean.TRUE);
+        //扫描路径
+        String[] basePackages = new String[]{"com.wt"};
+        feignProperties.put("feign.basePackages", basePackages);
+        PropertiesPropertySource propertySource = new PropertiesPropertySource("feign", feignProperties);
+        environment.getPropertySources().addFirst(propertySource);
     }
+
 }
