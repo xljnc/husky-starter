@@ -17,7 +17,7 @@ public class FeignHttpConfig {
 
     @Bean
     @Qualifier("httpContract")
-    public Contract feignContract() {
+    public Contract feignHttpContract() {
         return new feign.Contract.Default();
     }
 

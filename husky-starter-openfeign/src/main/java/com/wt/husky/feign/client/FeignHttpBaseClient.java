@@ -11,8 +11,8 @@ import java.net.URI;
  * @author 一贫
  * @date 2021/8/18
  */
-@FeignClient(name = "base", configuration = FeignHttpConfig.class)
-public interface FeignBaseClient {
+@FeignClient(name = "http-base", configuration = FeignHttpConfig.class)
+public interface FeignHttpBaseClient {
 
     @RequestLine("POST")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

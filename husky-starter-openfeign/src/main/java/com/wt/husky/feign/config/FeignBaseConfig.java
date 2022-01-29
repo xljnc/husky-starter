@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.commons.httpclient.OkHttpClientConnectionPoolFactory;
 import org.springframework.cloud.commons.httpclient.OkHttpClientFactory;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -31,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 @ConditionalOnClass(Feign.class)
 @ConditionalOnProperty(value = "feign.okhttp.enabled", havingValue = "true", matchIfMissing = true)
 @ConfigurationProperties(prefix = "feign.httpclient")
+@EnableDiscoveryClient
 public class FeignBaseConfig {
 
     private okhttp3.OkHttpClient okHttpClient;
