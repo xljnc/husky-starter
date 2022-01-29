@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @author 一贫
  * @date 2021/1/4
  */
-@EnableFeignClients("${feign.basePackages}")
+@EnableFeignClients("${feign.basePackages:com.wt.**.feign}")
 @Import(FeignClientsConfiguration.class)
 @Configuration
 @ConditionalOnClass(Feign.class)

@@ -2,9 +2,9 @@
 rootProject.name = 'husky-starter'
 include(':husky-starter-rocketmq')
 include(':husky-starter-mybatis-plus')
-include(':husky-starter-json')
+include(':husky-starter-util')
 include(':husky-starter-redis')
 include(':husky-starter-openfeign')
 include(':husky-starter-config-center')
-include 'husky-starter-rpc'
+include(':husky-starter-rpc')
 

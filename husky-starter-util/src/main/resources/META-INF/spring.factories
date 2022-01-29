@@ -1,0 +1,8 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.wt.husky.util.json.ObjectMapperConfig,\
+  com.wt.husky.util.json.JsonUtil,\
+  com.wt.husky.util.copier.BeanUtils
+
+
+
+

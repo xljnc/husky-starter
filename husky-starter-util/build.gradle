@@ -5,4 +5,4 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 }
 
-description = 'husky-starter-json'
+description = 'husky-starter-util'

@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2020/12/29
  */
 @Configuration
-@MapperScan("${mybatis-plus.basePackages}")
+@MapperScan("${mybatis-plus.basePackages:com.wt.**.mapper}")
 public class MybatisPlusConfig {
 
     @Value("${mybatis-plus.dbType:mysql}")

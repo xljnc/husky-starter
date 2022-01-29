@@ -1,4 +1,4 @@
-package com.wt.husky.json;
+package com.wt.husky.util.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

@@ -30,8 +30,8 @@ public class OpenFeignEnvironmentPostProcessor implements EnvironmentPostProcess
         feignProperties.put("feign.compression.request.enabled", Boolean.TRUE);
         feignProperties.put("feign.compression.response.enabled", Boolean.TRUE);
         //扫描路径
-        String[] basePackages = new String[]{"com.wt"};
-        feignProperties.put("feign.basePackages", basePackages);
+//        String[] basePackages = new String[]{"com.wt.**.feign"};
+//        feignProperties.put("feign.basePackages", basePackages);
         PropertiesPropertySource propertySource = new PropertiesPropertySource("feign", feignProperties);
         environment.getPropertySources().addFirst(propertySource);
     }
