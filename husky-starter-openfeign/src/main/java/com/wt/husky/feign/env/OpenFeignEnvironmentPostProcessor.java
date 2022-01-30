@@ -7,6 +7,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.util.StringUtils;
 
 import java.util.Properties;
 
@@ -40,7 +41,14 @@ public class OpenFeignEnvironmentPostProcessor implements EnvironmentPostProcess
         feignProperties.put("server.ssl.protocol", "TLS");
         //启用spring bean定义重写
         feignProperties.put("spring.main.allow-bean-definition-overriding", Boolean.TRUE);
-        feignProperties.put("server.servlet.context-path", environment.getProperty("spring.application.name", "/"));
+        if (environment.containsProperty("spring.application.name")) {
+            String contextPath = environment.getProperty("spring.application.name");
+            if (StringUtils.hasText(contextPath)) {
+                if (!contextPath.startsWith("/"))
+                    contextPath = "/" + contextPath;
+                feignProperties.put("server.servlet.context-path", contextPath);
+            }
+        }
         //扫描路径
 //        String[] basePackages = new String[]{"com.wt.**.feign"};
 //        feignProperties.put("feign.basePackages", basePackages);
