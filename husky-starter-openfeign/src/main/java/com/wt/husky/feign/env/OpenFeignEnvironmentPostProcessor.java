@@ -29,6 +29,18 @@ public class OpenFeignEnvironmentPostProcessor implements EnvironmentPostProcess
         //开启压缩
         feignProperties.put("feign.compression.request.enabled", Boolean.TRUE);
         feignProperties.put("feign.compression.response.enabled", Boolean.TRUE);
+        //开启http2
+        feignProperties.put("server.http2.enabled", Boolean.TRUE);
+        feignProperties.put("server.compression.enabled", Boolean.TRUE);
+        //开启https
+        feignProperties.put("server.ssl.key-store", "classpath:keystore.p12");
+        feignProperties.put("server.ssl.key-password", "123456");
+        feignProperties.put("server.ssl.key-store-password", "123456");
+        feignProperties.put("server.ssl.enabled", Boolean.TRUE);
+        feignProperties.put("server.ssl.protocol", "TLS");
+        //启用spring bean定义重写
+        feignProperties.put("spring.main.allow-bean-definition-overriding", Boolean.TRUE);
+        feignProperties.put("server.servlet.context-path", environment.getProperty("spring.application.name", "/"));
         //扫描路径
 //        String[] basePackages = new String[]{"com.wt.**.feign"};
 //        feignProperties.put("feign.basePackages", basePackages);

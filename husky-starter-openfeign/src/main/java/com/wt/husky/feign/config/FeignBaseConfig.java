@@ -4,6 +4,7 @@ import feign.Client;
 import feign.Feign;
 import feign.okhttp.OkHttpClient;
 import okhttp3.ConnectionPool;
+import okhttp3.Protocol;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -20,6 +21,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import javax.annotation.PreDestroy;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,7 +60,9 @@ public class FeignBaseConfig {
         this.okHttpClient = httpClientFactory.createBuilder(httpClientProperties.isDisableSslValidation())
                 .connectTimeout(httpClientProperties.getConnectionTimeout(), TimeUnit.MILLISECONDS).connectionPool(connectionPool)
                 .readTimeout(readTimeout, TimeUnit.MILLISECONDS).writeTimeout(writeTimeout, TimeUnit.MILLISECONDS)
-                .followRedirects(httpClientProperties.isFollowRedirects()).build();
+                .followRedirects(httpClientProperties.isFollowRedirects())
+                .protocols(Arrays.asList(Protocol.H2_PRIOR_KNOWLEDGE))
+                .build();
         return this.okHttpClient;
     }
 
