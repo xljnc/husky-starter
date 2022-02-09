@@ -5,7 +5,6 @@ import feign.Feign;
 import feign.okhttp.OkHttpClient;
 import okhttp3.ConnectionPool;
 import okhttp3.Protocol;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,15 +13,12 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.commons.httpclient.OkHttpClientConnectionPoolFactory;
 import org.springframework.cloud.commons.httpclient.OkHttpClientFactory;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.cloud.openfeign.support.FeignHttpClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 import javax.annotation.PreDestroy;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,7 +26,6 @@ import java.util.concurrent.TimeUnit;
  * @date 2021/1/4
  */
 @EnableFeignClients(basePackages = "${feign.basePackages:com.wt.**.feign}",defaultConfiguration = FeignMvcConfig.class)
-@Import(FeignClientsConfiguration.class)
 @Configuration
 @ConditionalOnClass(Feign.class)
 @ConditionalOnProperty(value = "feign.okhttp.enabled", havingValue = "true", matchIfMissing = true)

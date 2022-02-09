@@ -1,22 +1,27 @@
 package com.wt.husky.feign.config;
 
 import feign.Contract;
+import feign.MethodMetadata;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.openfeign.AnnotatedParameterProcessor;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.CollectionFormat;
 import org.springframework.cloud.openfeign.FeignClientProperties;
-import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
 
 /**
  * @author 一贫
@@ -36,6 +41,32 @@ public class FeignMvcConfig {
     @Primary
     public Contract feignSpringMvcContract(ConversionService feignConversionService) {
         boolean decodeSlash = feignClientProperties == null || feignClientProperties.isDecodeSlash();
-        return new SpringMvcContract(parameterProcessors, feignConversionService, decodeSlash);
+        return new HuskySpringMvcContract(parameterProcessors, feignConversionService, decodeSlash);
+    }
+
+    @Slf4j
+    static class HuskySpringMvcContract extends SpringMvcContract {
+
+        HuskySpringMvcContract() {
+            super();
+        }
+
+        HuskySpringMvcContract(List<AnnotatedParameterProcessor> annotatedParameterProcessors,
+                               ConversionService conversionService, boolean decodeSlash) {
+            super(annotatedParameterProcessors, conversionService, decodeSlash);
+        }
+
+        @Override
+        protected void processAnnotationOnClass(MethodMetadata data, Class<?> clz) {
+            RequestMapping classAnnotation = findMergedAnnotation(clz, RequestMapping.class);
+            //这里区别原有的SpringMvcContract，SpringMvcContract不允许@FeignClient接口上存在@RequestMapping注解
+            if (classAnnotation != null)
+                log.info("process class: " + clz.getName()
+                        + ". with @RequestMapping annotation on @FeignClient interfaces.");
+            CollectionFormat collectionFormat = findMergedAnnotation(clz, CollectionFormat.class);
+            if (collectionFormat != null) {
+                data.template().collectionFormat(collectionFormat.value());
+            }
+        }
     }
 }

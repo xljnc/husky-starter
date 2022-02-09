@@ -31,7 +31,7 @@ allprojects {
             dependency 'com.baomidou:mybatis-plus-boot-starter:3.4.3.4'
             dependency 'org.apache.rocketmq:rocketmq-spring-boot-starter:2.2.1'
             dependency 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.0'
-            dependency 'io.github.openfeign:feign-okhttp:11.8'
+            dependency 'io.github.openfeign:feign-okhttp:11.7'
             dependency 'mysql:mysql-connector-java:8.0.27'
             dependency 'com.alibaba.nacos:nacos-client:2.0.3'
             dependency 'org.apache.dubbo:dubbo-spring-boot-starter:2.7.15'
