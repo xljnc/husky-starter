@@ -5,20 +5,21 @@ import feign.MethodMetadata;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
 import org.springframework.cloud.openfeign.AnnotatedParameterProcessor;
 import org.springframework.cloud.openfeign.CollectionFormat;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.FeignClientProperties;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
@@ -44,6 +45,16 @@ public class FeignMvcConfig {
         return new HuskySpringMvcContract(parameterProcessors, feignConversionService, decodeSlash);
     }
 
+    @Bean
+    public WebMvcRegistrations feignWebRegistrations() {
+        return new WebMvcRegistrations() {
+            @Override
+            public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
+                return new FeignRequestMappingHandlerMapping();
+            }
+        };
+    }
+
     @Slf4j
     static class HuskySpringMvcContract extends SpringMvcContract {
 
@@ -67,6 +78,13 @@ public class FeignMvcConfig {
             if (collectionFormat != null) {
                 data.template().collectionFormat(collectionFormat.value());
             }
+        }
+    }
+
+    static class FeignRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
+        @Override
+        protected boolean isHandler(Class<?> beanType) {
+            return super.isHandler(beanType) && !AnnotatedElementUtils.hasAnnotation(beanType, FeignClient.class);
         }
     }
 }

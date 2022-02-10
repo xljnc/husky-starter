@@ -1,7 +1,7 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.wt.husky.feign.config.FeignBaseConfig,\
 #  com.wt.husky.feign.config.FeignHttpConfig,\
-#   com.wt.husky.feign.config.FeignMvcConfig,\
+   com.wt.husky.feign.config.FeignMvcConfig,\
   com.wt.husky.feign.config.Http2HttpsConfig
 
 org.springframework.boot.env.EnvironmentPostProcessor=\
