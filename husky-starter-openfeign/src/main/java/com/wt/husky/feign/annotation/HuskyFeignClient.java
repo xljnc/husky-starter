@@ -25,7 +25,7 @@ public @interface HuskyFeignClient {
      *
      * @return the name of the service with optional protocol prefix
      */
-    @AliasFor(value = "value", annotation = FeignClient.class)
+    @AliasFor("name")
     String value() default "";
 
     /**
@@ -34,14 +34,13 @@ public @interface HuskyFeignClient {
      *
      * @return bean name instead of name if present
      */
-    @AliasFor(value = "contextId", annotation = FeignClient.class)
     String contextId() default "";
 
     /**
      * @return The service id with optional protocol prefix. Synonym for {@link #value()
      * value}.
      */
-    @AliasFor(value = "name", annotation = FeignClient.class)
+    @AliasFor("value")
     String name() default "";
 
     /**
@@ -53,19 +52,17 @@ public @interface HuskyFeignClient {
      * first to {@link #qualifier()} and, if that's also not present, to the default =
      * <code>contextId + "FeignClient"</code>.
      */
-    @AliasFor(value = "qualifiers", annotation = FeignClient.class)
+    @Deprecated
     String[] qualifiers() default {};
 
     /**
      * @return an absolute URL or resolvable hostname (the protocol is optional).
      */
-    @AliasFor(value = "url", annotation = FeignClient.class)
     String url() default "";
 
     /**
      * @return whether 404s should be decoded instead of throwing FeignExceptions
      */
-    @AliasFor(value = "decode404", annotation = FeignClient.class)
     boolean decode404() default false;
 
     /**
@@ -76,7 +73,6 @@ public @interface HuskyFeignClient {
      * @return list of configurations for feign client
      * @see FeignClientsConfiguration for the defaults
      */
-    @AliasFor(value = "configuration", annotation = FeignClient.class)
     Class<?>[] configuration() default {};
 
     /**
@@ -85,7 +81,6 @@ public @interface HuskyFeignClient {
      *
      * @return fallback class for the specified Feign client interface
      */
-    @AliasFor(value = "fallback", annotation = FeignClient.class)
     Class<?> fallback() default void.class;
 
     /**
@@ -96,18 +91,15 @@ public @interface HuskyFeignClient {
      * @return fallback factory for the specified Feign client interface
      * @see FallbackFactory for details.
      */
-    @AliasFor(value = "fallbackFactory", annotation = FeignClient.class)
     Class<?> fallbackFactory() default void.class;
 
     /**
      * @return path prefix to be used by all method-level mappings.
      */
-    @AliasFor(value = "path", annotation = FeignClient.class)
     String path() default "";
 
     /**
      * @return whether to mark the feign proxy as a primary bean. Defaults to true.
      */
-    @AliasFor(value = "primary", annotation = FeignClient.class)
     boolean primary() default true;
 }

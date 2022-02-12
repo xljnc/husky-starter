@@ -3,6 +3,7 @@ package com.wt.husky.feign.config;
 import com.wt.husky.feign.annotation.EnableHuskyFeignClients;
 import com.wt.husky.feign.annotation.HuskyFeignClient;
 import feign.Request;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -20,6 +21,7 @@ import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
@@ -30,6 +32,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,6 +44,7 @@ import java.util.*;
  * @date 2022/2/11
  * @see org.springframework.cloud.openfeign.FeignClientsRegistrar
  */
+@Slf4j
 public class HuskyFeignClientsRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware, EnvironmentAware {
 
     private ResourceLoader resourceLoader;
@@ -284,14 +288,45 @@ public class HuskyFeignClientsRegistrar implements ImportBeanDefinitionRegistrar
         //如果path为空，则检查是否存在@RequestMapping注解，如果存在则用@RequestMapping注解的值作为path
         if (!StringUtils.hasText(path)) {
             String canonicalName = RequestMapping.class.getCanonicalName();
-            if (annotationMetadata.hasAnnotation(canonicalName)) {
-                Map<String, Object> requestMappingAttrs = annotationMetadata.getAnnotationAttributes(canonicalName);
-                path = (String) requestMappingAttrs.get("value");
-                if (!StringUtils.hasText(path))
-                    path = (String) requestMappingAttrs.get("path");
+            Map<String, Object> requestMappingAttrs = new HashMap<>();
+            if (annotationMetadata.hasAnnotation(canonicalName))
+                requestMappingAttrs = annotationMetadata.getAnnotationAttributes(canonicalName);
+            else {
+                String className = annotationMetadata.getClassName();
+                Class<?> clazz = null;
+                try {
+                    clazz = Class.forName(className);
+                } catch (ClassNotFoundException e) {
+                    String msg = String.format("class %s not found。", className);
+                    log.error(msg, e);
+                    throw new RuntimeException(msg, e);
+                }
+                requestMappingAttrs = resolveParentInterface(clazz, RequestMapping.class);
             }
+            String[] pathArray = (String[]) requestMappingAttrs.get("value");
+            if (pathArray == null || pathArray.length == 0)
+                pathArray = (String[]) requestMappingAttrs.get("path");
+            if (pathArray != null && pathArray.length != 0)
+                path = pathArray[0];
         }
         return getPath(path);
+    }
+
+    private <A extends Annotation> Map<String, Object> resolveParentInterface(Class<?> clazz, Class<A> targetClass) {
+        Class<?>[] superClasses = clazz.getInterfaces();
+        Map<String, Object> result = new HashMap<>();
+        if (superClasses.length == 0)
+            return result;
+        for (Class<?> item : superClasses) {
+            A a = AnnotationUtils.findAnnotation(item, targetClass);
+            if (a == null)
+                result = resolveParentInterface(item, targetClass);
+            else {
+                result = AnnotationUtils.getAnnotationAttributes(a);
+                break;
+            }
+        }
+        return result;
     }
 
     protected ClassPathScanningCandidateComponentProvider getScanner() {

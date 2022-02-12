@@ -1,5 +1,6 @@
 package com.wt.husky.feign.config;
 
+import com.wt.husky.feign.annotation.HuskyFeignClient;
 import feign.Contract;
 import feign.MethodMetadata;
 import lombok.extern.slf4j.Slf4j;
@@ -84,7 +85,7 @@ public class FeignMvcConfig {
     static class FeignRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
         @Override
         protected boolean isHandler(Class<?> beanType) {
-            return super.isHandler(beanType) && !AnnotatedElementUtils.hasAnnotation(beanType, FeignClient.class);
+            return super.isHandler(beanType) && !AnnotatedElementUtils.hasAnnotation(beanType, FeignClient.class) && !AnnotatedElementUtils.hasAnnotation(beanType, HuskyFeignClient.class);
         }
     }
 }

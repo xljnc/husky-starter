@@ -1,10 +1,8 @@
 package com.wt.husky.feign.annotation;
 
 import com.wt.husky.feign.config.HuskyFeignClientsRegistrar;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
 
@@ -25,7 +23,6 @@ public @interface EnableHuskyFeignClients {
      *
      * @return the array of 'basePackages'.
      */
-    @AliasFor(value = "value", annotation = EnableFeignClients.class)
     String[] value() default {};
 
     /**
@@ -38,7 +35,6 @@ public @interface EnableHuskyFeignClients {
      *
      * @return the array of 'basePackages'.
      */
-    @AliasFor(value = "basePackages", annotation = EnableFeignClients.class)
     String[] basePackages() default {};
 
     /**
@@ -50,7 +46,6 @@ public @interface EnableHuskyFeignClients {
      *
      * @return the array of 'basePackageClasses'.
      */
-    @AliasFor(value = "basePackageClasses", annotation = EnableFeignClients.class)
     Class<?>[] basePackageClasses() default {};
 
     /**
@@ -61,7 +56,6 @@ public @interface EnableHuskyFeignClients {
      * @return list of default configurations
      * @see FeignClientsConfiguration for the defaults
      */
-    @AliasFor(value = "defaultConfiguration", annotation = EnableFeignClients.class)
     Class<?>[] defaultConfiguration() default {};
 
     /**
@@ -70,6 +64,5 @@ public @interface EnableHuskyFeignClients {
      *
      * @return list of FeignClient classes
      */
-    @AliasFor(value = "clients", annotation = EnableFeignClients.class)
     Class<?>[] clients() default {};
 }
