@@ -1,5 +1,6 @@
 package com.wt.husky.feign.config;
 
+import com.wt.husky.feign.annotation.EnableHuskyFeignClients;
 import feign.Client;
 import feign.Feign;
 import feign.okhttp.OkHttpClient;
@@ -25,7 +26,8 @@ import java.util.concurrent.TimeUnit;
  * @author 一贫
  * @date 2021/1/4
  */
-@EnableFeignClients(basePackages = "${feign.basePackages:com.wt.**.feign}",defaultConfiguration = FeignMvcConfig.class)
+@EnableFeignClients(basePackages = "${feign.basePackages:com.wt.**.feign}", defaultConfiguration = FeignMvcConfig.class)
+@EnableHuskyFeignClients(basePackages = "${feign.basePackages:com.wt.**.feign}", defaultConfiguration = FeignMvcConfig.class)
 @Configuration
 @ConditionalOnClass(Feign.class)
 @ConditionalOnProperty(value = "feign.okhttp.enabled", havingValue = "true", matchIfMissing = true)
