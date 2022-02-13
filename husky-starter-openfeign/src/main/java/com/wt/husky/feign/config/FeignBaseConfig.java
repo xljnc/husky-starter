@@ -1,9 +1,7 @@
 package com.wt.husky.feign.config;
 
 import com.wt.husky.feign.annotation.EnableHuskyFeignClients;
-import feign.Client;
 import feign.Feign;
-import feign.okhttp.OkHttpClient;
 import okhttp3.ConnectionPool;
 import okhttp3.Protocol;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -28,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  */
 @EnableFeignClients(basePackages = "${feign.basePackages:com.wt.**.feign}", defaultConfiguration = FeignMvcConfig.class)
 @EnableHuskyFeignClients(basePackages = "${feign.basePackages:com.wt.**.feign}", defaultConfiguration = FeignMvcConfig.class)
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(Feign.class)
 @ConditionalOnProperty(value = "feign.okhttp.enabled", havingValue = "true", matchIfMissing = true)
 @ConfigurationProperties(prefix = "feign.httpclient")
@@ -58,7 +56,7 @@ public class FeignBaseConfig {
                 .connectTimeout(httpClientProperties.getConnectionTimeout(), TimeUnit.MILLISECONDS).connectionPool(connectionPool)
                 .readTimeout(readTimeout, TimeUnit.MILLISECONDS).writeTimeout(writeTimeout, TimeUnit.MILLISECONDS)
                 .followRedirects(httpClientProperties.isFollowRedirects())
-                .protocols(Arrays.asList(Protocol.H2_PRIOR_KNOWLEDGE))
+                .protocols(Arrays.asList(Protocol.HTTP_2, Protocol.HTTP_1_1))
                 .build();
         return this.okHttpClient;
     }
@@ -69,11 +67,5 @@ public class FeignBaseConfig {
             this.okHttpClient.dispatcher().executorService().shutdown();
             this.okHttpClient.connectionPool().evictAll();
         }
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(Client.class)
-    public Client feignClient(okhttp3.OkHttpClient client) {
-        return new OkHttpClient(client);
     }
 }
