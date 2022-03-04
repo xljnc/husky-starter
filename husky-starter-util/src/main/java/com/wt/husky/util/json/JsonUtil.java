@@ -25,7 +25,7 @@ public class JsonUtil {
         try {
             return objectMapper.writeValueAsString(value);
         } catch (JsonProcessingException e) {
-            String msg = String.format("Jackson转String失败,对象:{}", value);
+            String msg = String.format("Jackson转String失败,对象:%s", value);
             log.error(msg, e);
             throw new RuntimeException(msg, e);
         }
@@ -35,7 +35,7 @@ public class JsonUtil {
         try {
             return objectMapper.writeValueAsBytes(value);
         } catch (JsonProcessingException e) {
-            String msg = String.format("Jackson转String失败,对象:{}", value);
+            String msg = String.format("Jackson转String失败,对象:%s", value);
             log.error(msg, e);
             throw new RuntimeException(msg, e);
         }
@@ -45,7 +45,7 @@ public class JsonUtil {
         try {
             return objectMapper.readValue(content, valueType);
         } catch (JsonProcessingException e) {
-            String msg = String.format("Jackson转换对象失败,String:{},Class:{}", content, valueType);
+            String msg = String.format("Jackson转换对象失败,String:%s,Class:%s", content, valueType.getCanonicalName());
             log.error(msg, e);
             throw new RuntimeException(msg, e);
         }
@@ -57,7 +57,7 @@ public class JsonUtil {
         } catch (IOException e) {
             String msg = null;
             try {
-                msg = String.format("Jackson转换对象失败,String:{},Class:{}", new String(content, "utf-8"), valueType);
+                msg = String.format("Jackson转换对象失败,String:%s,Class:%s", new String(content, "utf-8"), valueType.getCanonicalName());
             } catch (UnsupportedEncodingException ue) {
                 log.error("byte数组转String失败", ue);
             }
@@ -70,7 +70,7 @@ public class JsonUtil {
         try {
             return objectMapper.readTree(content);
         } catch (IOException e) {
-            String msg = String.format("Jackson转换对象失败,String:{}", content);
+            String msg = String.format("Jackson转换对象失败,String:%s", content);
             log.error(msg, e);
             throw new RuntimeException(msg, e);
         }
@@ -82,7 +82,7 @@ public class JsonUtil {
         } catch (IOException e) {
             String msg = null;
             try {
-                msg = String.format("Jackson转换对象失败,String:{}", new String(content, "utf-8"));
+                msg = String.format("Jackson转换对象失败,String:%s", new String(content, "utf-8"));
             } catch (UnsupportedEncodingException ue) {
                 log.error("byte数组转String失败", ue);
             }
