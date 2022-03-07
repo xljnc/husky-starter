@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author yipin
@@ -55,15 +56,11 @@ public class JsonUtil {
         try {
             return objectMapper.readValue(content, valueType);
         } catch (IOException e) {
-            String msg = null;
-            try {
-                msg = String.format("Jackson转换对象失败,String:%s,Class:%s", new String(content, "utf-8"), valueType.getCanonicalName());
-            } catch (UnsupportedEncodingException ue) {
-                log.error("byte数组转String失败", ue);
-            }
+            String msg = String.format("Jackson转换对象失败,String:%s,Class:%s", new String(content, StandardCharsets.UTF_8), valueType.getCanonicalName());
             log.error(msg, e);
             throw new RuntimeException(msg, e);
         }
+
     }
 
     public JsonNode readValue(String content) throws RuntimeException {
@@ -80,12 +77,7 @@ public class JsonUtil {
         try {
             return objectMapper.readTree(content);
         } catch (IOException e) {
-            String msg = null;
-            try {
-                msg = String.format("Jackson转换对象失败,String:%s", new String(content, "utf-8"));
-            } catch (UnsupportedEncodingException ue) {
-                log.error("byte数组转String失败", ue);
-            }
+            String msg = String.format("Jackson转换对象失败,String:%s", new String(content, StandardCharsets.UTF_8));
             log.error(msg, e);
             throw new RuntimeException(msg, e);
         }
