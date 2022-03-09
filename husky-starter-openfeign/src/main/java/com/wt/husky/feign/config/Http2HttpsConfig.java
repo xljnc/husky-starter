@@ -1,5 +1,7 @@
 package com.wt.husky.feign.config;
 
+import io.undertow.Undertow;
+import io.undertow.UndertowOptions;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,10 +21,18 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConditionalOnProperty(value = "server.http2.enabled", havingValue = "true", matchIfMissing = true)
-@ConditionalOnClass(Tomcat.class)
 public class Http2HttpsConfig {
 
     @Bean
+    @ConditionalOnClass(Undertow.class)
+    public UndertowServletWebServerFactory embeddedServletContainerFactory() {
+        UndertowServletWebServerFactory factory = new UndertowServletWebServerFactory();
+        factory.addBuilderCustomizers(builder -> builder.setServerOption(UndertowOptions.ENABLE_HTTP2, true));
+        return factory;
+    }
+
+    @Bean
+    @ConditionalOnClass(Tomcat.class)
     public Connector connector(@Value("${server.port:443}") int port, @Value("${http.port:80}") int httpPort) {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
@@ -32,6 +43,7 @@ public class Http2HttpsConfig {
     }
 
     @Bean
+    @ConditionalOnClass(Tomcat.class)
     public TomcatServletWebServerFactory tomcatServletWebServerFactory(Connector connector) {
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
             @Override

@@ -2,8 +2,10 @@ package com.wt.husky.feign.config;
 
 import com.wt.husky.feign.annotation.EnableHuskyFeignClients;
 import feign.Feign;
+import io.undertow.Undertow;
 import okhttp3.ConnectionPool;
 import okhttp3.Protocol;
+import org.apache.catalina.startup.Tomcat;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -50,7 +52,22 @@ public class FeignBaseConfig {
     }
 
     @Bean
+    @ConditionalOnClass(Undertow.class)
     public okhttp3.OkHttpClient client(OkHttpClientFactory httpClientFactory, ConnectionPool connectionPool,
+                                       FeignHttpClientProperties httpClientProperties) {
+        this.okHttpClient = httpClientFactory.createBuilder(httpClientProperties.isDisableSslValidation())
+                .connectTimeout(httpClientProperties.getConnectionTimeout(), TimeUnit.MILLISECONDS).connectionPool(connectionPool)
+                .readTimeout(readTimeout, TimeUnit.MILLISECONDS).writeTimeout(writeTimeout, TimeUnit.MILLISECONDS)
+                .followRedirects(httpClientProperties.isFollowRedirects())
+                .protocols(Arrays.asList(Protocol.H2_PRIOR_KNOWLEDGE, Protocol.HTTP_1_1))
+                .build();
+        return this.okHttpClient;
+    }
+
+    @Bean
+    @ConditionalOnClass(Tomcat.class)
+    @ConditionalOnMissingBean(okhttp3.OkHttpClient.class)
+    public okhttp3.OkHttpClient tomcatClient(OkHttpClientFactory httpClientFactory, ConnectionPool connectionPool,
                                        FeignHttpClientProperties httpClientProperties) {
         this.okHttpClient = httpClientFactory.createBuilder(httpClientProperties.isDisableSslValidation())
                 .connectTimeout(httpClientProperties.getConnectionTimeout(), TimeUnit.MILLISECONDS).connectionPool(connectionPool)

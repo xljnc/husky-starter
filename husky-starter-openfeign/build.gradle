@@ -2,6 +2,8 @@
 dependencies {
     api 'org.springframework.cloud:spring-cloud-starter-openfeign'
     api 'org.springframework.boot:spring-boot-starter-web'
+    api 'org.springframework.boot:spring-boot-starter-undertow'
+    compileOnly 'org.springframework.boot:spring-boot-starter-tomcat'
     implementation 'io.github.openfeign:feign-okhttp'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'org.springframework.boot:spring-boot-autoconfigure'
