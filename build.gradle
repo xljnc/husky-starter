@@ -30,8 +30,8 @@ allprojects {
             dependency 'org.hibernate.validator:hibernate-validator:6.2.1.Final'
             dependency 'com.baomidou:mybatis-plus-boot-starter:3.4.3.4'
             dependency 'org.apache.rocketmq:rocketmq-spring-boot-starter:2.2.1'
-            dependency 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.0'
-            dependency 'io.github.openfeign:feign-okhttp:11.7'
+            dependency 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.1'
+            dependency 'io.github.openfeign:feign-okhttp:11.8'
             dependency 'mysql:mysql-connector-java:8.0.27'
             dependency 'com.alibaba.nacos:nacos-client:2.0.3'
             dependency 'org.apache.dubbo:dubbo-spring-boot-starter:2.7.15'
@@ -39,6 +39,7 @@ allprojects {
             dependency("org.springframework.boot:spring-boot-starter-web:${rootProject.ext.springbootVersion}"){
                 exclude 'org.springframework.boot:spring-boot-starter-tomcat'
             }
+            dependency 'org.springframework:spring-webmvc:5.3.14'
         }
         imports {
             mavenBom "org.springframework.boot:spring-boot-dependencies:${rootProject.ext.springbootVersion}"

@@ -5,8 +5,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.context.annotation.ComponentScan;
 
-import java.lang.reflect.InvocationTargetException;
-
 /**
  * @author qiyu
  * @date 2022/1/29

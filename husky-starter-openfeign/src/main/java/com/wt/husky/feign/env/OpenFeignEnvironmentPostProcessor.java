@@ -30,25 +30,11 @@ public class OpenFeignEnvironmentPostProcessor implements EnvironmentPostProcess
         //开启压缩
         feignProperties.put("feign.compression.request.enabled", Boolean.TRUE);
         feignProperties.put("feign.compression.response.enabled", Boolean.TRUE);
-        //开启http2
-        feignProperties.put("server.http2.enabled", Boolean.TRUE);
-        feignProperties.put("server.compression.enabled", Boolean.TRUE);
-        //开启https
-        feignProperties.put("server.ssl.key-store", "classpath:keystore.p12");
-        feignProperties.put("server.ssl.key-password", "123456");
-        feignProperties.put("server.ssl.key-store-password", "123456");
-        feignProperties.put("server.ssl.enabled", Boolean.TRUE);
-        feignProperties.put("server.ssl.protocol", "TLS");
+        //默认开启http2
+        if (!environment.containsProperty("feign.http2.enabled"))
+            feignProperties.put("feign.http2.enabled", Boolean.TRUE);
         //启用spring bean定义重写
         feignProperties.put("spring.main.allow-bean-definition-overriding", Boolean.TRUE);
-        if (environment.containsProperty("spring.application.name")) {
-            String contextPath = environment.getProperty("spring.application.name");
-            if (StringUtils.hasText(contextPath)) {
-                if (!contextPath.startsWith("/"))
-                    contextPath = "/" + contextPath;
-                feignProperties.put("server.servlet.context-path", contextPath);
-            }
-        }
         //扫描路径
 //        String[] basePackages = new String[]{"com.wt.**.feign"};
 //        feignProperties.put("feign.basePackages", basePackages);
