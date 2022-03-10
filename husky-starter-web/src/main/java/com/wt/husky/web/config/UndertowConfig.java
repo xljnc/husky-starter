@@ -4,12 +4,14 @@ import io.undertow.UndertowOptions;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.EnvironmentAware;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 /**
  * @author qiyu
  * @date 2022/1/30
  */
+@Configuration
 public class UndertowConfig implements WebServerFactoryCustomizer<UndertowServletWebServerFactory>, EnvironmentAware {
 
     private Environment environment;

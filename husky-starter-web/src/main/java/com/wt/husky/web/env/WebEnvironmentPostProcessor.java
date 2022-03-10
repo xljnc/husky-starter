@@ -27,7 +27,7 @@ public class WebEnvironmentPostProcessor implements EnvironmentPostProcessor {
             webProperties.put("server.http2.enabled", Boolean.TRUE);
         webProperties.put("server.compression.enabled", Boolean.TRUE);
         //如果开启https而且没有详细配置
-        if (Boolean.valueOf(environment.getProperty("server.ssl.enabled", "false")) && !environment.containsProperty("server.ssl.key-store")) {
+        if (Boolean.valueOf(environment.getProperty("server.ssl.enabled", "false"))) {
             webProperties.put("server.ssl.key-store", "classpath:keystore.p12");
             webProperties.put("server.ssl.key-password", "123456");
             webProperties.put("server.ssl.key-store-password", "123456");

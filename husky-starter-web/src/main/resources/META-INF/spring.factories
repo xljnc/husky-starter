@@ -1,4 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.wt.husky.web.config.UndertowConfig,\
   com.wt.husky.web.config.TomcatConfig
 
 org.springframework.boot.env.EnvironmentPostProcessor=\

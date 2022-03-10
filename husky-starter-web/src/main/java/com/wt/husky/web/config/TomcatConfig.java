@@ -10,22 +10,25 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 /**
  * @author qiyu
  * @date 2022/1/30
  */
 @Configuration
-@ConditionalOnProperty(value = "server.ssl.enabled", havingValue = "true")
 @ConditionalOnClass(Tomcat.class)
-public class TomcatConfig implements WebServerFactoryCustomizer<TomcatServletWebServerFactory> {
+public class TomcatConfig implements WebServerFactoryCustomizer<TomcatServletWebServerFactory>, EnvironmentAware {
 
     @Value("${server.port:443}")
     private int port;
 
     @Value("${http.port:80}")
     private int httpPort;
+
+    private Environment environment;
 
     @Override
     public void customize(TomcatServletWebServerFactory factory) {
@@ -35,14 +38,21 @@ public class TomcatConfig implements WebServerFactoryCustomizer<TomcatServletWeb
         connector.setSecure(false);
         connector.setRedirectPort(port);
         connector.addUpgradeProtocol(new Http2Protocol());
+        if (Boolean.valueOf(environment.getProperty("server.ssl.enabled", "false"))) {
+            factory.addContextCustomizers(context -> {
+                SecurityConstraint securityConstraint = new SecurityConstraint();
+                securityConstraint.setUserConstraint("CONFIDENTIAL");
+                SecurityCollection collection = new SecurityCollection();
+                collection.addPattern("/*");
+                securityConstraint.addCollection(collection);
+                context.addConstraint(securityConstraint);
+            });
+        }
         factory.addAdditionalTomcatConnectors(connector);
-        factory.addContextCustomizers(context -> {
-            SecurityConstraint securityConstraint = new SecurityConstraint();
-            securityConstraint.setUserConstraint("CONFIDENTIAL");
-            SecurityCollection collection = new SecurityCollection();
-            collection.addPattern("/*");
-            securityConstraint.addCollection(collection);
-            context.addConstraint(securityConstraint);
-        });
+    }
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
 }

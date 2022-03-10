@@ -285,31 +285,32 @@ public class HuskyFeignClientsRegistrar implements ImportBeanDefinitionRegistrar
 
     private String getPath(ConfigurableBeanFactory beanFactory, Map<String, Object> attributes, AnnotationMetadata annotationMetadata) {
         String path = resolve(beanFactory, (String) attributes.get("path"));
-        //如果path为空，则检查是否存在@RequestMapping注解，如果存在则用@RequestMapping注解的值作为path
-        if (!StringUtils.hasText(path)) {
-            String canonicalName = RequestMapping.class.getCanonicalName();
-            Map<String, Object> requestMappingAttrs = new HashMap<>();
-            if (annotationMetadata.hasAnnotation(canonicalName))
-                requestMappingAttrs = annotationMetadata.getAnnotationAttributes(canonicalName);
-            else {
-                String className = annotationMetadata.getClassName();
-                Class<?> clazz = null;
-                try {
-                    clazz = Class.forName(className);
-                } catch (ClassNotFoundException e) {
-                    String msg = String.format("class %s not found。", className);
-                    log.error(msg, e);
-                    throw new RuntimeException(msg, e);
-                }
-                requestMappingAttrs = resolveParentInterface(clazz, RequestMapping.class);
+        path = getPath(path);
+        //获取@RequestMapping注解的值, 拼接到path里
+        String canonicalName = RequestMapping.class.getCanonicalName();
+        Map<String, Object> requestMappingAttrs = new HashMap<>();
+        if (annotationMetadata.hasAnnotation(canonicalName))
+            requestMappingAttrs = annotationMetadata.getAnnotationAttributes(canonicalName);
+        else {
+            String className = annotationMetadata.getClassName();
+            Class<?> clazz = null;
+            try {
+                clazz = Class.forName(className);
+            } catch (ClassNotFoundException e) {
+                String msg = String.format("class %s not found。", className);
+                log.error(msg, e);
+                throw new RuntimeException(msg, e);
             }
-            String[] pathArray = (String[]) requestMappingAttrs.get("value");
-            if (pathArray == null || pathArray.length == 0)
-                pathArray = (String[]) requestMappingAttrs.get("path");
-            if (pathArray != null && pathArray.length != 0)
-                path = pathArray[0];
+            requestMappingAttrs = resolveParentInterface(clazz, RequestMapping.class);
         }
-        return getPath(path);
+        String[] pathArray = (String[]) requestMappingAttrs.get("value");
+        if (pathArray == null || pathArray.length == 0)
+            pathArray = (String[]) requestMappingAttrs.get("path");
+        if (pathArray != null && pathArray.length != 0) {
+            String requestMappingPath = getPath(pathArray[0]);
+            path = path + requestMappingPath;
+        }
+        return path;
     }
 
     private <A extends Annotation> Map<String, Object> resolveParentInterface(Class<?> clazz, Class<A> targetClass) {
