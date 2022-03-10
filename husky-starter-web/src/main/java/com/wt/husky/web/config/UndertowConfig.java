@@ -1,6 +1,8 @@
 package com.wt.husky.web.config;
 
+import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.EnvironmentAware;
@@ -12,6 +14,7 @@ import org.springframework.core.env.Environment;
  * @date 2022/1/30
  */
 @Configuration
+@ConditionalOnClass(Undertow.class)
 public class UndertowConfig implements WebServerFactoryCustomizer<UndertowServletWebServerFactory>, EnvironmentAware {
 
     private Environment environment;

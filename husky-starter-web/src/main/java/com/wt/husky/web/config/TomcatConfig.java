@@ -7,7 +7,6 @@ import org.apache.tomcat.util.descriptor.web.SecurityCollection;
 import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.EnvironmentAware;
@@ -34,11 +33,11 @@ public class TomcatConfig implements WebServerFactoryCustomizer<TomcatServletWeb
     public void customize(TomcatServletWebServerFactory factory) {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
-        connector.setPort(httpPort);
         connector.setSecure(false);
-        connector.setRedirectPort(port);
         connector.addUpgradeProtocol(new Http2Protocol());
         if (Boolean.valueOf(environment.getProperty("server.ssl.enabled", "false"))) {
+            connector.setPort(httpPort);
+            connector.setRedirectPort(port);
             factory.addContextCustomizers(context -> {
                 SecurityConstraint securityConstraint = new SecurityConstraint();
                 securityConstraint.setUserConstraint("CONFIDENTIAL");
@@ -47,6 +46,9 @@ public class TomcatConfig implements WebServerFactoryCustomizer<TomcatServletWeb
                 securityConstraint.addCollection(collection);
                 context.addConstraint(securityConstraint);
             });
+        }
+        else{
+            connector.setPort(httpPort);
         }
         factory.addAdditionalTomcatConnectors(connector);
     }

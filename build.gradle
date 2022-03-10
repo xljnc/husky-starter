@@ -36,9 +36,6 @@ allprojects {
             dependency 'com.alibaba.nacos:nacos-client:2.0.3'
             dependency 'org.apache.dubbo:dubbo-spring-boot-starter:2.7.15'
             dependency 'org.apache.dubbo:dubbo:3.0.5'
-            dependency("org.springframework.boot:spring-boot-starter-web:${rootProject.ext.springbootVersion}"){
-                exclude 'org.springframework.boot:spring-boot-starter-tomcat'
-            }
             dependency 'org.springframework:spring-webmvc:5.3.14'
         }
         imports {
