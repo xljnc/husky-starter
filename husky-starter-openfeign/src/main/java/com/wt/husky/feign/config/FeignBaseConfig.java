@@ -1,6 +1,7 @@
 package com.wt.husky.feign.config;
 
 import com.wt.husky.feign.annotation.EnableHuskyFeignClients;
+import com.wt.husky.feign.interceptor.ResponseInterceptor;
 import feign.Feign;
 import okhttp3.ConnectionPool;
 import okhttp3.Protocol;
@@ -56,15 +57,20 @@ public class FeignBaseConfig {
                                        FeignHttpClientProperties httpClientProperties,
                                        ConfigurableEnvironment environment) {
         List<Protocol> protocols = null;
-        if (Boolean.valueOf(environment.getProperty("feign.http2.enabled", "true")))
-            protocols = Arrays.asList(Protocol.H2_PRIOR_KNOWLEDGE);
-        else
+        //默认启用HTTP2
+        if (Boolean.valueOf(environment.getProperty("feign.http2.enabled", "true"))) {
+            if (Boolean.valueOf(environment.getProperty("feign.ssl.enabled", "false")))
+                protocols = Arrays.asList(Protocol.HTTP_2, Protocol.HTTP_1_1);
+            else
+                protocols = Arrays.asList(Protocol.H2_PRIOR_KNOWLEDGE);
+        } else
             protocols = Arrays.asList(Protocol.HTTP_1_1);
         this.okHttpClient = httpClientFactory.createBuilder(httpClientProperties.isDisableSslValidation())
                 .connectTimeout(httpClientProperties.getConnectionTimeout(), TimeUnit.MILLISECONDS).connectionPool(connectionPool)
                 .readTimeout(readTimeout, TimeUnit.MILLISECONDS).writeTimeout(writeTimeout, TimeUnit.MILLISECONDS)
                 .followRedirects(httpClientProperties.isFollowRedirects())
                 .protocols(protocols)
+                .addInterceptor(new ResponseInterceptor())
                 .build();
         return this.okHttpClient;
     }

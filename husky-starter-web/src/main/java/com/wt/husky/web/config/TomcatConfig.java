@@ -35,8 +35,8 @@ public class TomcatConfig implements WebServerFactoryCustomizer<TomcatServletWeb
         connector.setScheme("http");
         connector.setSecure(false);
         connector.addUpgradeProtocol(new Http2Protocol());
+        connector.setPort(httpPort);
         if (Boolean.valueOf(environment.getProperty("server.ssl.enabled", "false"))) {
-            connector.setPort(httpPort);
             connector.setRedirectPort(port);
             factory.addContextCustomizers(context -> {
                 SecurityConstraint securityConstraint = new SecurityConstraint();
@@ -46,9 +46,6 @@ public class TomcatConfig implements WebServerFactoryCustomizer<TomcatServletWeb
                 securityConstraint.addCollection(collection);
                 context.addConstraint(securityConstraint);
             });
-        }
-        else{
-            connector.setPort(httpPort);
         }
         factory.addAdditionalTomcatConnectors(connector);
     }

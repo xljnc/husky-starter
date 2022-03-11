@@ -7,7 +7,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
-import org.springframework.util.StringUtils;
 
 import java.util.Properties;
 
@@ -33,6 +32,9 @@ public class OpenFeignEnvironmentPostProcessor implements EnvironmentPostProcess
         //默认开启http2
         if (!environment.containsProperty("feign.http2.enabled"))
             feignProperties.put("feign.http2.enabled", Boolean.TRUE);
+        //默认关闭https
+        if (!environment.containsProperty("feign.ssl.enabled"))
+            feignProperties.put("feign.ssl.enabled", Boolean.FALSE);
         //启用spring bean定义重写
         feignProperties.put("spring.main.allow-bean-definition-overriding", Boolean.TRUE);
         //扫描路径
