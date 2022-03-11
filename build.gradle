@@ -37,6 +37,9 @@ allprojects {
             dependency 'org.apache.dubbo:dubbo-spring-boot-starter:2.7.15'
             dependency 'org.apache.dubbo:dubbo:3.0.5'
             dependency 'org.springframework:spring-webmvc:5.3.14'
+            dependency("org.springframework.boot:spring-boot-starter-web:${rootProject.ext.springbootVersion}"){
+                exclude 'org.springframework.boot:spring-boot-starter-tomcat'
+            }
         }
         imports {
             mavenBom "org.springframework.boot:spring-boot-dependencies:${rootProject.ext.springbootVersion}"
