@@ -7,6 +7,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.util.ClassUtils;
 
 import java.util.Properties;
 
@@ -40,6 +41,9 @@ public class OpenFeignEnvironmentPostProcessor implements EnvironmentPostProcess
         //扫描路径
 //        String[] basePackages = new String[]{"com.wt.**.feign"};
 //        feignProperties.put("feign.basePackages", basePackages);
+        //如果接入了Sentinel，则默认开启
+        if (ClassUtils.isPresent("com.alibaba.cloud.sentinel.custom.SentinelAutoConfiguration", null) && !environment.containsProperty("feign.http2.enabled"))
+            feignProperties.put("feign.sentinel.enabled", Boolean.TRUE);
         PropertiesPropertySource propertySource = new PropertiesPropertySource("feign", feignProperties);
         environment.getPropertySources().addFirst(propertySource);
     }

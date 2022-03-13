@@ -2,7 +2,7 @@
 dependencies {
     api 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'io.github.openfeign:feign-okhttp'
-    implementation 'org.springframework:spring-webmvc:5.3.14'
+    implementation 'org.springframework:spring-webmvc'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'org.springframework.boot:spring-boot-autoconfigure'
     compileOnly 'org.projectlombok:lombok'
