@@ -1,5 +1,6 @@
 package com.wt.husky.feign.config;
 
+import com.wt.husky.feign.fallback.FeignHttpFallback;
 import feign.Contract;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -18,4 +19,9 @@ public class FeignHttpConfig {
         return new feign.Contract.Default();
     }
 
+
+    @Bean
+    public FeignHttpFallback feignHttpFallback() {
+        return new FeignHttpFallback();
+    }
 }
