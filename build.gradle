@@ -15,7 +15,7 @@ version '1.0.0-SNAPSHOT'
 
 ext {
     springbootVersion = '2.6.3'
-    springCloudAlibabaVersion = '2021.1'
+    springcloudAlibabaVersion = '2021.1'
     sourceCompatibility = 11
     jarArchiveClassifier = ''
     sourceJarArchiveClassifier = 'sources'
@@ -44,7 +44,7 @@ allprojects {
         }
         imports {
             mavenBom "org.springframework.boot:spring-boot-dependencies:${rootProject.ext.springbootVersion}"
-            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${rootProject.ext.springCloudAlibabaVersion}"
+            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${rootProject.ext.springcloudAlibabaVersion}"
         }
     }
 }
