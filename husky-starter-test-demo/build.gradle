@@ -1,0 +1,12 @@
+dependencies {
+    testImplementation project(':husky-starter-redis')
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+
+test{
+    enabled = true
+}
+
+description = 'husky-starter-test-demo'

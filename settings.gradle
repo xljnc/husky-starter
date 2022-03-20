@@ -8,4 +8,5 @@ include(':husky-starter-openfeign')
 include(':husky-starter-config-center')
 include(':husky-starter-rpc')
 include(':husky-starter-web')
+include(':husky-starter-test-demo')
 
