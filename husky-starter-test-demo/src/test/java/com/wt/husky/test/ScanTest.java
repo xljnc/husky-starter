@@ -1,4 +1,4 @@
-package com.wt.husky;
+package com.wt.husky.test;
 
 import com.wt.husky.redis.util.RedisUtil;
 import org.junit.jupiter.api.Test;

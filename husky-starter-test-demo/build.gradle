@@ -1,8 +1,8 @@
 dependencies {
-    implementation project(':husky-starter-redis')
+    testImplementation project(':husky-starter-redis')
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testCompileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 test{

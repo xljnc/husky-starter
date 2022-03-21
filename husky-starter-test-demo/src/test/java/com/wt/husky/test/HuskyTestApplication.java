@@ -1,4 +1,4 @@
-package com.wt.husky;
+package com.wt.husky.test;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,5 +7,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2022/3/20
  */
 @SpringBootApplication
-public class ApplicationTest {
+public class HuskyTestApplication {
 }
