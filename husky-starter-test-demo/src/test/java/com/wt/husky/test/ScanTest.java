@@ -4,12 +4,14 @@ import com.wt.husky.redis.util.RedisUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 /**
  * @author qiyu
  * @date 2022/3/20
  */
 @SpringBootTest
+@ActiveProfiles("local")
 public class ScanTest {
 
     @Autowired
