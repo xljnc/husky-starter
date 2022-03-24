@@ -150,6 +150,11 @@ public class RedisUtil {
         return (T) jacksonRedisTemplate.opsForValue().get(key);
     }
 
+    /**
+     * https://www.jianshu.com/p/4c842c41ba41
+     * @param pattern
+     * @return java.util.Set<java.lang.String>
+     */
     public Set<String> scan(String pattern) {
         jacksonRedisTemplate.executeWithStickyConnection()
     }
