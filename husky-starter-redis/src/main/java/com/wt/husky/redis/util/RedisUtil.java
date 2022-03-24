@@ -1,10 +1,10 @@
 package com.wt.husky.redis.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -21,13 +21,12 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtil {
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    @Qualifier("jacksonRedisTemplate")
+    private RedisTemplate<String, Object> jacksonRedisTemplate;
 
     @Autowired
-    private ValueOperations<String, Object> valueOperations;
-
-    @Autowired
-    private ListOperations<String, Object> listOperations;
+    @Qualifier("stringRedisTemplate")
+    private StringRedisTemplate stringRedisTemplate;
 
     /**
      * @param key
@@ -35,7 +34,7 @@ public class RedisUtil {
      * @description 检查Key是否存在
      */
     public boolean existsKey(String key) {
-        return redisTemplate.hasKey(key);
+        return jacksonRedisTemplate.hasKey(key);
     }
 
     /**
@@ -44,31 +43,43 @@ public class RedisUtil {
      * @description
      */
     public boolean deleteKey(String key) {
-        return redisTemplate.delete(key);
+        return jacksonRedisTemplate.delete(key);
     }
 
     /**
      * 通过前缀模糊匹配删除Key
+     * 注意：这是个危险操作，因为keys命令的复杂度是O(n),执行速度非常慢
+     * Redis的单线程模型决定了在执行完keys命令前是阻塞的
+     * key数量大的情况下非常危险， 酌情使用
+     *
+     * @deprecated As of JDK version 8
      **/
+    @Deprecated(since = "jdk8")
     public Long deleteByPrefix(String prefix) {
-        Set<String> keys = redisTemplate.keys(prefix + "*");
-        return redisTemplate.delete(keys);
+        Set<String> keys = jacksonRedisTemplate.keys(prefix + "*");
+        return jacksonRedisTemplate.delete(keys);
     }
 
     /**
      * 通过后缀模糊匹配删除Key
+     * 注意：这是个危险操作，因为keys命令的复杂度是O(n),执行速度非常慢
+     * Redis的单线程模型决定了在执行完keys命令前是阻塞的
+     * key数量大的情况下非常危险， 酌情使用
+     *
+     * @deprecated As of JDK version 8
      **/
+    @Deprecated(since = "jdk8")
     public Long deleteBySuffix(String suffix) {
-        Set<String> keys = redisTemplate.keys("*" + suffix);
-        return redisTemplate.delete(keys);
+        Set<String> keys = jacksonRedisTemplate.keys("*" + suffix);
+        return jacksonRedisTemplate.delete(keys);
     }
 
 
     /**
      * 获取String类型的Value
      **/
-    public String getStringValue(String key) {
-        return (String) valueOperations.get(key);
+    public String getString(String key) {
+        return stringRedisTemplate.opsForValue().get(key);
     }
 
     /**
@@ -77,8 +88,8 @@ public class RedisUtil {
      * @return void
      * @description 设置String类型的Value
      */
-    public void setStringValue(String key, String value) {
-        valueOperations.set(key, value);
+    public void setString(String key, String value) {
+        stringRedisTemplate.opsForValue().set(key, value);
     }
 
     /**
@@ -89,17 +100,18 @@ public class RedisUtil {
      * @return void
      * @description 设置String类型的Value
      */
-    public void setStringValue(String key, String value, Long expireTime, TimeUnit timeUnit) {
-        valueOperations.set(key, value, expireTime, timeUnit);
+    public void setString(String key, String value, Long expireTime, TimeUnit timeUnit) {
+        stringRedisTemplate.opsForValue().set(key, value, expireTime, timeUnit);
     }
 
     /**
      * @param key
+     * @param timeUnit
      * @return java.lang.Long
-     * @description 获取key的过期时间，单位秒
+     * @description 获取key的过期时间
      */
-    public Long getExpireTime(String key) {
-        return redisTemplate.getExpire(key, TimeUnit.SECONDS);
+    public Long getExpireTime(String key, TimeUnit timeUnit) {
+        return jacksonRedisTemplate.getExpire(key, timeUnit);
     }
 
     /**
@@ -111,7 +123,7 @@ public class RedisUtil {
      * @param timeUnit
      */
     public void setObjectValue(String key, Object value, Long expireTime, TimeUnit timeUnit) {
-        valueOperations.set(key, value, expireTime, timeUnit);
+        jacksonRedisTemplate.opsForValue().set(key, value, expireTime, timeUnit);
     }
 
     /**
@@ -120,15 +132,22 @@ public class RedisUtil {
      * @param key
      * @param value
      */
-    public void setObjectValue(String key, Object value) {
-        valueOperations.set(key, value);
+    public void setObject(String key, Object value) {
+        jacksonRedisTemplate.opsForValue().set(key, value);
     }
 
     /**
      * 获取java对象
      **/
-    public Object getObjectValue(String key) {
-        return valueOperations.get(key);
+    public Object getObject(String key) {
+        return jacksonRedisTemplate.opsForValue().get(key);
+    }
+
+    /**
+     * 获取java对象
+     **/
+    public <T> T getSpecifiedObject(String key) {
+        return (T) jacksonRedisTemplate.opsForValue().get(key);
     }
 
 }
