@@ -3,10 +3,13 @@ package com.wt.husky.redis.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -152,10 +155,24 @@ public class RedisUtil {
 
     /**
      * https://www.jianshu.com/p/4c842c41ba41
+     *
      * @param pattern
      * @return java.util.Set<java.lang.String>
      */
-    public Set<String> scan(String pattern) {
-        jacksonRedisTemplate.executeWithStickyConnection()
+    public Set<String> scan(String pattern, long count) {
+        Set<String> keys = new HashSet<>();
+        Cursor<byte[]> cursor = null;
+        try {
+            cursor = jacksonRedisTemplate.executeWithStickyConnection(connection ->
+                    connection.scan(ScanOptions.scanOptions().match(pattern).count(count).build())
+            );
+            while (cursor.hasNext()) {
+                keys.add(new String(cursor.next()));
+            }
+        } finally {
+            if (!cursor.isClosed())
+                cursor.close();
+        }
+        return keys;
     }
 }
