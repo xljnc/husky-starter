@@ -149,14 +149,15 @@ public class RedisUtil {
     /**
      * 获取java对象
      **/
-    public <T> T getSpecifiedObject(String key) {
+    public <T> T getGenericObject(String key) {
         return (T) jacksonRedisTemplate.opsForValue().get(key);
     }
 
     /**
-     * https://www.jianshu.com/p/4c842c41ba41
+     * 扫描key
      *
-     * @param pattern
+     * @param pattern 扫描模式
+     * @param count   每次扫描的数量
      * @return java.util.Set<java.lang.String>
      */
     public Set<String> scan(String pattern, long count) {
@@ -170,7 +171,7 @@ public class RedisUtil {
                 keys.add(new String(cursor.next()));
             }
         } finally {
-            if (!cursor.isClosed())
+            if (cursor != null && !cursor.isClosed())
                 cursor.close();
         }
         return keys;
