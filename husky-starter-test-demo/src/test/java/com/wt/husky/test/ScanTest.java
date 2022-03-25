@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -44,4 +42,18 @@ public class ScanTest {
         System.out.println(keys.size());
     }
 
+    @Test
+    public void testGetMultiHashValues() {
+        List<Object> hashKeys = Arrays.asList("key1", "key2", "key3");
+        List<Object> values = redisUtil.getMultiHashValues("people2", hashKeys);
+        System.out.println(hashKeys);
+        System.out.println(values);
+    }
+
+    @Test
+    public void testScanHash() {
+        Set<Map.Entry<Object, Object>> entries = redisUtil.scanHash("people2", "key*", 1000);
+        System.out.println(entries.size());
+        System.out.println(entries);
+    }
 }

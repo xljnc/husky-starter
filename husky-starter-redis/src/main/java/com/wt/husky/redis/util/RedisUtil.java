@@ -9,8 +9,7 @@ import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -222,13 +221,48 @@ public class RedisUtil {
     }
 
     /**
-     * 是否存在key
+     * 是否存在 hash key
      *
      * @param key     key
      * @param hashKey hash键
      * @return java.lang.Boolean 是否存在key
      */
-    public Boolean setHashValueIfAbsent(String key, String hashKey) {
+    public Boolean containsKey(String key, String hashKey) {
         return jacksonRedisTemplate.opsForHash().hasKey(key, hashKey);
+    }
+
+    /**
+     * 批量获取 hash key
+     *
+     * @param key      key
+     * @param hashKeys hash键集合
+     * @return
+     */
+    public List<Object> getMultiHashValues(String key, Collection<Object> hashKeys) {
+        return jacksonRedisTemplate.opsForHash().multiGet(key, hashKeys);
+    }
+
+    /**
+     * 扫描key
+     *
+     * @param key     key
+     * @param pattern 扫描模式
+     * @param count   每次扫描的数量
+     * @return hash中的键值对
+     */
+    public Set<Map.Entry<Object, Object>> scanHash(String key, String pattern, long count) {
+        Cursor<Map.Entry<Object, Object>> cursor = null;
+        Set<Map.Entry<Object, Object>> entries = new HashSet<>();
+        try {
+            cursor = jacksonRedisTemplate.opsForHash().scan(key,
+                    ScanOptions.scanOptions().match(pattern).count(count).build());
+            while (cursor.hasNext()) {
+                entries.add(cursor.next());
+            }
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+        }
+        return entries;
     }
 }
