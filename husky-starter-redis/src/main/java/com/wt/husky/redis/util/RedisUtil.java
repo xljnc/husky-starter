@@ -96,25 +96,39 @@ public class RedisUtil {
     }
 
     /**
+     * 设置String类型的Value
+     *
      * @param key
      * @param value
      * @param expireTime
      * @param timeUnit
      * @return void
-     * @description 设置String类型的Value
      */
     public void setString(String key, String value, Long expireTime, TimeUnit timeUnit) {
         stringRedisTemplate.opsForValue().set(key, value, expireTime, timeUnit);
     }
 
     /**
+     * 获取过期时间
+     *
      * @param key
      * @param timeUnit
      * @return java.lang.Long
-     * @description 获取key的过期时间
      */
     public Long getExpireTime(String key, TimeUnit timeUnit) {
         return jacksonRedisTemplate.getExpire(key, timeUnit);
+    }
+
+    /**
+     * 设置过期时间
+     *
+     * @param key        key
+     * @param expireTime 过期时间
+     * @param timeUnit   时间格式
+     * @return java.lang.Boolean 是否成功
+     */
+    public Boolean setExpireTime(String key, Long expireTime, TimeUnit timeUnit) {
+        return jacksonRedisTemplate.expire(key, expireTime, timeUnit);
     }
 
     /**
@@ -140,14 +154,14 @@ public class RedisUtil {
     }
 
     /**
-     * 获取java对象
+     * 获取对象
      **/
     public Object getObject(String key) {
         return jacksonRedisTemplate.opsForValue().get(key);
     }
 
     /**
-     * 获取java对象
+     * 获取指定类型对象
      **/
     public <T> T getGenericObject(String key) {
         return (T) jacksonRedisTemplate.opsForValue().get(key);
@@ -175,5 +189,46 @@ public class RedisUtil {
                 cursor.close();
         }
         return keys;
+    }
+
+    /**
+     * 存储可序列化对象
+     *
+     * @param key
+     * @param value
+     */
+    public void setHash(String key, String hashKey, Object value) {
+        jacksonRedisTemplate.opsForHash().put(key, hashKey, value);
+    }
+
+    /**
+     * 获取hash key存储值
+     *
+     * @param key
+     * @param hashKey
+     */
+    public <T> T getHash(String key, String hashKey) {
+        return (T) jacksonRedisTemplate.opsForHash().get(key, hashKey);
+    }
+
+    /**
+     * @param key     key
+     * @param hashKey hash键
+     * @param value   hash值
+     * @return java.lang.Boolean 是否成功
+     */
+    public Boolean setHashValueIfAbsent(String key, String hashKey, Object value) {
+        return jacksonRedisTemplate.opsForHash().putIfAbsent(key, hashKey, value);
+    }
+
+    /**
+     * 是否存在key
+     *
+     * @param key     key
+     * @param hashKey hash键
+     * @return java.lang.Boolean 是否存在key
+     */
+    public Boolean setHashValueIfAbsent(String key, String hashKey) {
+        return jacksonRedisTemplate.opsForHash().hasKey(key, hashKey);
     }
 }
