@@ -36,7 +36,7 @@ public class RedisUtil {
      * @description 检查Key是否存在
      */
     public boolean existsKey(String key) {
-        return jacksonRedisTemplate.hasKey(key);
+        return stringRedisTemplate.hasKey(key);
     }
 
     /**
@@ -45,7 +45,7 @@ public class RedisUtil {
      * @description
      */
     public boolean deleteKey(String key) {
-        return jacksonRedisTemplate.delete(key);
+        return stringRedisTemplate.delete(key);
     }
 
     /**
@@ -58,8 +58,8 @@ public class RedisUtil {
      **/
     @Deprecated(since = "jdk8")
     public Long deleteByPrefix(String prefix) {
-        Set<String> keys = jacksonRedisTemplate.keys(prefix + "*");
-        return jacksonRedisTemplate.delete(keys);
+        Set<String> keys = stringRedisTemplate.keys(prefix + "*");
+        return stringRedisTemplate.delete(keys);
     }
 
     /**
@@ -72,8 +72,8 @@ public class RedisUtil {
      **/
     @Deprecated(since = "jdk8")
     public Long deleteBySuffix(String suffix) {
-        Set<String> keys = jacksonRedisTemplate.keys("*" + suffix);
-        return jacksonRedisTemplate.delete(keys);
+        Set<String> keys = stringRedisTemplate.keys("*" + suffix);
+        return stringRedisTemplate.delete(keys);
     }
 
 
@@ -115,7 +115,7 @@ public class RedisUtil {
      * @return java.lang.Long
      */
     public Long getExpireTime(String key, TimeUnit timeUnit) {
-        return jacksonRedisTemplate.getExpire(key, timeUnit);
+        return stringRedisTemplate.getExpire(key, timeUnit);
     }
 
     /**
@@ -127,7 +127,7 @@ public class RedisUtil {
      * @return java.lang.Boolean 是否成功
      */
     public Boolean setExpireTime(String key, Long expireTime, TimeUnit timeUnit) {
-        return jacksonRedisTemplate.expire(key, expireTime, timeUnit);
+        return stringRedisTemplate.expire(key, expireTime, timeUnit);
     }
 
     /**
@@ -138,7 +138,7 @@ public class RedisUtil {
      * @param expireTime
      * @param timeUnit
      */
-    public void setObjectValue(String key, Object value, Long expireTime, TimeUnit timeUnit) {
+    public void setObject(String key, Object value, Long expireTime, TimeUnit timeUnit) {
         jacksonRedisTemplate.opsForValue().set(key, value, expireTime, timeUnit);
     }
 
@@ -177,7 +177,7 @@ public class RedisUtil {
         Set<String> keys = new HashSet<>();
         Cursor<byte[]> cursor = null;
         try {
-            cursor = jacksonRedisTemplate.executeWithStickyConnection(connection ->
+            cursor = stringRedisTemplate.executeWithStickyConnection(connection ->
                     connection.scan(ScanOptions.scanOptions().match(pattern).count(count).build())
             );
             while (cursor.hasNext()) {
@@ -191,23 +191,24 @@ public class RedisUtil {
     }
 
     /**
-     * 存储可序列化对象
+     * 存储Hash
      *
-     * @param key
-     * @param value
+     * @param key     key
+     * @param hashKey hash Key
+     * @param value   hash value
      */
     public void setHash(String key, String hashKey, Object value) {
-        jacksonRedisTemplate.opsForHash().put(key, hashKey, value);
+        stringRedisTemplate.opsForHash().put(key, hashKey, value);
     }
 
     /**
      * 获取hash key存储值
      *
-     * @param key
-     * @param hashKey
+     * @param key     key
+     * @param hashKey hash Key
      */
     public <T> T getHash(String key, String hashKey) {
-        return (T) jacksonRedisTemplate.opsForHash().get(key, hashKey);
+        return (T) stringRedisTemplate.opsForHash().get(key, hashKey);
     }
 
     /**
@@ -217,7 +218,7 @@ public class RedisUtil {
      * @return java.lang.Boolean 是否成功
      */
     public Boolean setHashValueIfAbsent(String key, String hashKey, Object value) {
-        return jacksonRedisTemplate.opsForHash().putIfAbsent(key, hashKey, value);
+        return stringRedisTemplate.opsForHash().putIfAbsent(key, hashKey, value);
     }
 
     /**
@@ -227,8 +228,8 @@ public class RedisUtil {
      * @param hashKey hash键
      * @return java.lang.Boolean 是否存在key
      */
-    public Boolean containsKey(String key, String hashKey) {
-        return jacksonRedisTemplate.opsForHash().hasKey(key, hashKey);
+    public Boolean containsHashKey(String key, String hashKey) {
+        return stringRedisTemplate.opsForHash().hasKey(key, hashKey);
     }
 
     /**
@@ -239,7 +240,7 @@ public class RedisUtil {
      * @return
      */
     public List<Object> getMultiHashValues(String key, Collection<Object> hashKeys) {
-        return jacksonRedisTemplate.opsForHash().multiGet(key, hashKeys);
+        return stringRedisTemplate.opsForHash().multiGet(key, hashKeys);
     }
 
     /**
@@ -254,7 +255,7 @@ public class RedisUtil {
         Cursor<Map.Entry<Object, Object>> cursor = null;
         Set<Map.Entry<Object, Object>> entries = new HashSet<>();
         try {
-            cursor = jacksonRedisTemplate.opsForHash().scan(key,
+            cursor = stringRedisTemplate.opsForHash().scan(key,
                     ScanOptions.scanOptions().match(pattern).count(count).build());
             while (cursor.hasNext()) {
                 entries.add(cursor.next());
@@ -265,4 +266,10 @@ public class RedisUtil {
         }
         return entries;
     }
+
+    public Boolean addZsetValue(String key, String value, double score) {
+        return stringRedisTemplate.opsForZSet().add(key, value, score);
+    }
+
+
 }
