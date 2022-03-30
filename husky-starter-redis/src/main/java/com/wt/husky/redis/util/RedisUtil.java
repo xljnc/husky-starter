@@ -279,6 +279,30 @@ public class RedisUtil {
     }
 
     /**
+     * 扫描key
+     *
+     * @param key     key
+     * @param pattern 扫描模式
+     * @param count   每次扫描的数量
+     * @return set中的值
+     */
+    public Set<String> scanSet(String key, String pattern, long count) {
+        Cursor<String> cursor = null;
+        Set<String> values = new HashSet<>();
+        try {
+            cursor = stringRedisTemplate.opsForSet().scan(key,
+                    ScanOptions.scanOptions().match(pattern).count(count).build());
+            while (cursor.hasNext()) {
+                values.add(cursor.next());
+            }
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+        }
+        return values;
+    }
+
+    /**
      * value加入到zset
      *
      * @param key   key
@@ -290,5 +314,25 @@ public class RedisUtil {
         return stringRedisTemplate.opsForZSet().add(key, value, score);
     }
 
+    /**
+     * value加入到HyperLogLog
+     *
+     * @param key    key
+     * @param values values
+     * @return java.lang.Long 添加成功的个数
+     */
+    public Long addHyperLogLogValue(String key, String... values) {
+        return stringRedisTemplate.opsForHyperLogLog().add(key, values);
+    }
 
+    /**
+     * HyperLogLog基数
+     * 如果是多个HyperLogLog，则返回基数估值之和
+     *
+     * @param keys    keys
+     * @return java.lang.Long 基数估值之和
+     */
+    public Long hyperLogLogValueSize(String... keys) {
+        return stringRedisTemplate.opsForHyperLogLog().size(keys);
+    }
 }
