@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 @SpringBootTest
 @ActiveProfiles("local")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ScanTest {
+public class RedisTest {
 
     @Autowired
     private RedisUtil redisUtil;
@@ -56,4 +56,5 @@ public class ScanTest {
         System.out.println(entries.size());
         System.out.println(entries);
     }
+
 }

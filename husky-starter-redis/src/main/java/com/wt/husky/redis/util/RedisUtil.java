@@ -267,7 +267,26 @@ public class RedisUtil {
         return entries;
     }
 
-    public Boolean addZsetValue(String key, String value, double score) {
+    /**
+     * 判断Set是否包含指定对象
+     *
+     * @param key       key
+     * @param candidate 对象
+     * @return java.lang.Boolean
+     */
+    public Boolean isSetMember(String key, String candidate) {
+        return stringRedisTemplate.opsForSet().isMember(key, candidate);
+    }
+
+    /**
+     * value加入到zset
+     *
+     * @param key   key
+     * @param value value
+     * @param score 分数
+     * @return java.lang.Boolean 是否添加成功
+     */
+    public Boolean addZSetValue(String key, String value, double score) {
         return stringRedisTemplate.opsForZSet().add(key, value, score);
     }
 
