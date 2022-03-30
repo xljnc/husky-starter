@@ -329,10 +329,21 @@ public class RedisUtil {
      * HyperLogLog基数
      * 如果是多个HyperLogLog，则返回基数估值之和
      *
-     * @param keys    keys
+     * @param keys keys
      * @return java.lang.Long 基数估值之和
      */
-    public Long hyperLogLogValueSize(String... keys) {
+    public Long sizeOfHyperLogLog(String... keys) {
         return stringRedisTemplate.opsForHyperLogLog().size(keys);
+    }
+
+    /**
+     * 合并HyperLogLog
+     *
+     * @param destination 目标
+     * @param sourceKeys  源
+     * @return java.lang.Long 合并后的基数估值之和
+     */
+    public Long mergeHyperLogLog(String destination, String... sourceKeys) {
+        return stringRedisTemplate.opsForHyperLogLog().union(destination, sourceKeys);
     }
 }
