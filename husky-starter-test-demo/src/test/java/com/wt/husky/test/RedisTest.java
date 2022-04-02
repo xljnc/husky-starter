@@ -1,5 +1,6 @@
 package com.wt.husky.test;
 
+import cn.hutool.core.date.DateUtil;
 import com.wt.husky.redis.util.RedisUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -7,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -74,9 +73,37 @@ public class RedisTest {
             redisUtil.addHyperLogLogValue("pfKey1", "key" + i);
             redisUtil.addHyperLogLogValue("pfKey2", "key" + i);
         }
-        redisUtil.mergeHyperLogLog("pfKey3", "pfKey1","pfKey2");
+        redisUtil.mergeHyperLogLog("pfKey3", "pfKey1", "pfKey2");
         System.out.println(redisUtil.sizeOfHyperLogLog("pfKey1"));
         System.out.println(redisUtil.sizeOfHyperLogLog("pfKey2"));
         System.out.println(redisUtil.sizeOfHyperLogLog("pfKey3"));
+    }
+
+    @Test
+    public void testBitSign() {
+        String userId = "sign::1";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
+        Calendar beginOfMonth = DateUtil.beginOfMonth(Calendar.getInstance());
+        int dayOffset = DateUtil.thisDayOfMonth();
+        String month = DateUtil.format(DateUtil.date(), formatter);
+        String hashKeyMonth = "1::" + month;
+        Random rad = new Random();
+        for (int offset = 0; offset < dayOffset; offset++) {
+            redisUtil.setBit(hashKeyMonth, offset, rad.nextBoolean());
+        }
+        //判断当天是否打卡
+        boolean signedDay = redisUtil.getBit(hashKeyMonth, dayOffset - 1);
+        System.out.println(signedDay);
+        boolean signedMonth = true;
+        for (int offset = 0; offset < dayOffset; offset++) {
+            signedMonth = redisUtil.getBit(hashKeyMonth, offset);
+            if (!signedMonth)
+                break;
+        }
+        System.out.println(signedMonth);
+        signedMonth = redisUtil.bitCount(hashKeyMonth, 0, dayOffset - 1).equals(Long.valueOf(dayOffset));
+        System.out.println(signedMonth);
+        redisUtil.setHash(userId, month, redisUtil.getString(hashKeyMonth));
+
     }
 }

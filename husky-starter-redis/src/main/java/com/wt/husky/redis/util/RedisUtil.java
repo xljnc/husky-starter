@@ -3,10 +3,7 @@ package com.wt.husky.redis.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ScanOptions;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -188,6 +185,41 @@ public class RedisUtil {
                 cursor.close();
         }
         return keys;
+    }
+
+    /**
+     * 位操作, set
+     *
+     * @param key    key
+     * @param offset 偏移量
+     * @param value  true:1, false:0
+     * @return java.lang.Boolean 是否成功
+     */
+    public Boolean setBit(String key, long offset, boolean value) {
+        return stringRedisTemplate.opsForValue().setBit(key, offset, value);
+    }
+
+    /**
+     * 位操作,get
+     *
+     * @param key    key
+     * @param offset 偏移量
+     * @return java.lang.Boolean true:1, false:0
+     */
+    public Boolean getBit(String key, long offset) {
+        return stringRedisTemplate.opsForValue().getBit(key, offset);
+    }
+
+    /**
+     * 位操作,统计被设置为1的位数
+     *
+     * @param key   key
+     * @param start 起始偏移量
+     * @param end   截止偏移量
+     * @return 被设置为1的位数
+     */
+    public Long bitCount(String key, long start, long end) {
+        return stringRedisTemplate.execute((RedisCallback<Long>) conn -> conn.bitCount(key.getBytes(), start, end));
     }
 
     /**
