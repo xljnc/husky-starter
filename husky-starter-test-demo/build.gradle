@@ -4,6 +4,8 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation 'cn.hutool:hutool-all'
+    testImplementation 'org.springframework.boot:spring-boot-starter-cache'
+    testImplementation 'com.github.ben-manes.caffeine:caffeine'
 }
 
 test{
