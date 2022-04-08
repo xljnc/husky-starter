@@ -37,6 +37,12 @@ public class RedisTest {
 //    }
 
     @Test
+    public void testGetSet() {
+        redisUtil.setString("sk","sv");
+        System.out.println(redisUtil.getString("sk"));
+    }
+
+    @Test
     public void scan() {
         for (int i = 0; i < 10000; i++) {
             redisUtil.setString("key" + i, String.valueOf(i), 1800L, TimeUnit.SECONDS);

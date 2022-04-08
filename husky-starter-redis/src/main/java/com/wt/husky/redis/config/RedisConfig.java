@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -22,7 +21,6 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  * @date 2020/12/29
  */
 @Configuration
-@EnableCaching
 @ConfigurationProperties(prefix = "spring.redis")
 @EnableConfigurationProperties
 public class RedisConfig {

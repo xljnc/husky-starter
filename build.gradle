@@ -26,6 +26,7 @@ apply plugin: "qiyuSpringBootPlugin"
 allprojects {
     dependencyManagement {
         dependencies {
+            dependency 'org.apache.commons:commons-pool2:2.11.1'
             dependency 'com.github.ben-manes.caffeine:caffeine:3.0.6'
             dependency 'cn.hutool:hutool-all:5.7.22'
             dependency group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
