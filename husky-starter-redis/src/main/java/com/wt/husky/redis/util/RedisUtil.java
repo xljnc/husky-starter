@@ -3,7 +3,9 @@ package com.wt.husky.redis.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.data.geo.Point;
 import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.domain.geo.Metrics;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -377,5 +379,52 @@ public class RedisUtil {
      */
     public Long mergeHyperLogLog(String destination, String... sourceKeys) {
         return stringRedisTemplate.opsForHyperLogLog().union(destination, sourceKeys);
+    }
+
+
+    /**
+     * 添加geo信息
+     *
+     * @param key    key
+     * @param x      精度
+     * @param y      维度
+     * @param member geo对象
+     * @return java.lang.Long
+     */
+    public Long addGeo(String key, double x, double y, String member) {
+        Point point = new Point(x, y);
+        return stringRedisTemplate.opsForGeo().add(key, point, member);
+    }
+
+    /**
+     * 添加geo信息
+     *
+     * @param key        key
+     * @param member1    geo对象
+     * @param member2    geo对象
+     * @param metricUnit 距离单位
+     * @return java.lang.Double 距离
+     */
+    public Double geoDistance(String key, String member1, String member2, MetricUnit metricUnit) {
+        return stringRedisTemplate.opsForGeo().distance(key, member1, member2, metricUnit.getMappedMetrics())
+                .getValue();
+    }
+
+    public enum MetricUnit {
+        METERS("m"), KILOMETERS("km"), MILES("mi"), FEET("ft");
+
+        private final String abbreviation;
+
+        MetricUnit(String abbreviation) {
+            this.abbreviation = abbreviation;
+        }
+
+        Metrics getMappedMetrics() {
+            for (Metrics item : Metrics.values()) {
+                if (item.getAbbreviation().equals(this.abbreviation))
+                    return item;
+            }
+            throw new IllegalArgumentException("距离单位不合法");
+        }
     }
 }
