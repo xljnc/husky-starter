@@ -3,6 +3,7 @@ package com.wt.husky.redis.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.domain.geo.Metrics;
@@ -406,8 +407,8 @@ public class RedisUtil {
      * @return java.lang.Double 距离
      */
     public Double geoDistance(String key, String member1, String member2, MetricUnit metricUnit) {
-        return stringRedisTemplate.opsForGeo().distance(key, member1, member2, metricUnit.getMappedMetrics())
-                .getValue();
+        Optional<Distance> distanceOptional = Optional.ofNullable(stringRedisTemplate.opsForGeo().distance(key, member1, member2, metricUnit.getMappedMetrics()));
+        return distanceOptional.map(Distance::getValue).orElse(null);
     }
 
     public enum MetricUnit {
