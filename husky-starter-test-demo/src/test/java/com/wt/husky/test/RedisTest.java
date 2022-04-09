@@ -38,7 +38,7 @@ public class RedisTest {
 
     @Test
     public void testGetSet() {
-        redisUtil.setString("sk","sv");
+        redisUtil.setString("sk", "sv");
         System.out.println(redisUtil.getString("sk"));
     }
 
@@ -111,5 +111,19 @@ public class RedisTest {
         System.out.println(signedMonth);
         redisUtil.setHash(userId, month, redisUtil.getString(hashKeyMonth));
 
+    }
+
+    @Test
+    public void testGeo() {
+        Map<String, double[]> members = new HashMap<>();
+        members.put("alibaba", new double[]{120.034568, 30.285501});
+        members.put("zheda", new double[]{120.08764, 30.308996});
+        redisUtil.batchAddGeo("company", members);
+        List<Double[]> positions = redisUtil.geoPosition("company", "alibaba", "zheda");
+        positions.forEach(x -> System.out.println(x[0] + "," + x[1]));
+        List<String> hashes = redisUtil.geoHash("company", "alibaba", "zheda");
+        hashes.forEach(x -> System.out.println(x));
+        Double distance = redisUtil.geoDistance("company", "alibaba", "zheda", RedisUtil.MetricUnit.KILOMETERS);
+        System.out.println("distance:" + distance);
     }
 }

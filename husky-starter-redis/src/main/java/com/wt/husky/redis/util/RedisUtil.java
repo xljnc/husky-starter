@@ -8,9 +8,11 @@ import org.springframework.data.geo.Point;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.domain.geo.Metrics;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * redis 工具类
@@ -398,7 +400,21 @@ public class RedisUtil {
     }
 
     /**
-     * 添加geo信息
+     * 批量添加geo信息
+     *
+     * @param key     key
+     * @param members geo对象
+     * @return java.lang.Long 添加的数量
+     */
+    public Long batchAddGeo(String key, Map<String, double[]> members) {
+        Map<String, Point> memberCoordinateMap = new HashMap<>();
+        members.entrySet().stream().forEach(member -> memberCoordinateMap.put(member.getKey(),
+                new Point(member.getValue()[0], member.getValue()[1])));
+        return stringRedisTemplate.opsForGeo().add(key, memberCoordinateMap);
+    }
+
+    /**
+     * 获取geo距离
      *
      * @param key        key
      * @param member1    geo对象
@@ -409,6 +425,44 @@ public class RedisUtil {
     public Double geoDistance(String key, String member1, String member2, MetricUnit metricUnit) {
         Optional<Distance> distanceOptional = Optional.ofNullable(stringRedisTemplate.opsForGeo().distance(key, member1, member2, metricUnit.getMappedMetrics()));
         return distanceOptional.map(Distance::getValue).orElse(null);
+    }
+
+    /**
+     * 获取geo信息
+     *
+     * @param key     key
+     * @param members geo对象
+     * @return List<Double [ 2 ]> 位置
+     */
+    public List<Double[]> geoPosition(String key, String... members) {
+        List<Point> points = stringRedisTemplate.opsForGeo().position(key, members);
+        if (CollectionUtils.isEmpty(points))
+            return Collections.emptyList();
+        return points.stream().map(point ->
+                new Double[]{point.getX(), point.getY()}
+        ).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取geo hash
+     *
+     * @param key     key
+     * @param members geo对象
+     * @return List<String> geo hash list
+     */
+    public List<String> geoHash(String key, String... members) {
+        return stringRedisTemplate.opsForGeo().hash(key, members);
+    }
+
+    /**
+     * 删除geo信息
+     *
+     * @param key     key
+     * @param members geo对象
+     * @return java.lang.Long 删除的数量
+     */
+    public Long removeGeo(String key, String... members) {
+        return stringRedisTemplate.opsForGeo().remove(key, members);
     }
 
     public enum MetricUnit {
