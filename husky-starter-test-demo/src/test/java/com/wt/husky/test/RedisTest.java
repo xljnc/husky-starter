@@ -125,5 +125,6 @@ public class RedisTest {
         hashes.forEach(x -> System.out.println(x));
         Double distance = redisUtil.geoDistance("company", "alibaba", "zheda", RedisUtil.MetricUnit.KILOMETERS);
         System.out.println("distance:" + distance);
+
     }
 }
