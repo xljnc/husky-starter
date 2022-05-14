@@ -19,3 +19,4 @@ db.product.createIndex({
 db.product.find({"price":20,"stock":8}).explain();
 //不能使用交叉索引
 db.product.find({"price":20}).sort({"stock":1}).explain();
+
