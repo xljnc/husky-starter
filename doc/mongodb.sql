@@ -86,3 +86,5 @@ db.product.createIndex
 db.product.find().sort({price:1,stock:-1}).explain();
 //索引不支持排序
 db.product.find().sort({price:1,stock:1}).explain();
+
+
