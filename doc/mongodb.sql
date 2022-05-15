@@ -65,3 +65,24 @@ db.product.insertOne(
 );
 db.product.find
 ();
+
+//复合索引-顺序
+db.product.drop();
+db.product.insertMany
+(
+[
+{"name":"a","price":60,"stock":10},
+{"name":"b","price":100,"stock":2},
+{"name":"c","price":20,"stock":8},
+{"name":"d","price":40,"stock":7},
+{"name":"e","price":80,"stock":1}
+]
+);
+db.product.createIndex
+({
+   price:1,stock:-1},{
+   background:true});
+//索引支持排序
+db.product.find().sort({price:1,stock:-1}).explain();
+//索引不支持排序
+db.product.find().sort({price:1,stock:1}).explain();
