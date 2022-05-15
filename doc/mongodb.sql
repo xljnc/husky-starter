@@ -1,5 +1,5 @@
 //交叉索引
-db.product.insertMany{
+db.product.insertMany(
 [
 {"name":"a","price":60,"stock":10},
 {"name":"b","price":100,"stock":2},
@@ -7,7 +7,7 @@ db.product.insertMany{
 {"name":"d","price":40,"stock":7},
 {"name":"e","price":80,"stock":1}
 ]
-}
+)
 db.product.createIndex({
    price:1},{
    background:true})
@@ -19,4 +19,23 @@ db.product.createIndex({
 db.product.find({"price":20,"stock":8}).explain();
 //不能使用交叉索引
 db.product.find({"price":20}).sort({"stock":1}).explain();
+
+//覆盖索引
+db.product.drop();
+db.product.insertMany(
+[
+{"name":"a","price":60,"stock":10},
+{"name":"b","price":100,"stock":2},
+{"name":"c","price":20,"stock":8},
+{"name":"d","price":40,"stock":7},
+{"name":"e","price":80,"stock":1}
+]
+)
+db.product.createIndex({
+   price:1,stock:1},{
+   background:true})
+//走覆盖索引
+db.product.find({"price":20,"stock":{$lte:10}},{_id:0,name:0}).explain("executionStats");
+//不走覆盖索引
+db.product.find({"price":20,"stock":{$lte:10}}).explain("executionStats");
 
