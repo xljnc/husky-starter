@@ -1,11 +1,11 @@
 dependencies {
     testImplementation project(':husky-starter-redis')
+    testImplementation 'com.github.ben-manes.caffeine:caffeine'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation 'cn.hutool:hutool-all'
     testImplementation 'org.springframework.boot:spring-boot-starter-cache'
-    testImplementation 'com.github.ben-manes.caffeine:caffeine'
 }
 
 test{
