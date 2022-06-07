@@ -26,9 +26,11 @@ apply plugin: "qiyuSpringBootPlugin"
 allprojects {
     dependencyManagement {
         dependencies {
+            dependency 'org.bytedeco:ffmpeg-platform-gpl:5.0-1.5.7'
+            dependency 'org.bytedeco:javacv-platform:1.5.7'
             dependency 'com.github.ben-manes.caffeine:caffeine:3.1.1'
             dependency 'org.apache.commons:commons-pool2:2.11.1'
-zz            dependency 'cn.hutool:hutool-all:5.7.22'
+            dependency 'cn.hutool:hutool-all:5.7.22'
             dependency group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
             dependency group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
             dependency 'org.hibernate.validator:hibernate-validator:6.2.1.Final'
