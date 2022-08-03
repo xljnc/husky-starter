@@ -4,4 +4,4 @@ dependencies {
     compileOnly 'org.springframework.boot:spring-boot-starter-tomcat'
 }
 
-description = 'husky-starter-util'
+description = 'husky-starter-web'

@@ -8,7 +8,7 @@ import okhttp3.Response;
 import java.io.IOException;
 
 /**
- * description
+ * okhttp3 拦截器
  *
  * @author wutian2@myhexin.com
  * @date 2022/3/11
@@ -24,7 +24,7 @@ public class ResponseInterceptor implements Interceptor {
             log.info("Response protocol:{}" + response.protocol());
             return response;
         } catch (Exception e) {
-            log.error("Openfeign请求异常", e);
+            log.error("okhttp3请求异常", e);
             throw e;
         }
     }
