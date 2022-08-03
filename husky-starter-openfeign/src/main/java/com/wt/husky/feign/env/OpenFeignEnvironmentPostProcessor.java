@@ -42,7 +42,7 @@ public class OpenFeignEnvironmentPostProcessor implements EnvironmentPostProcess
 //        String[] basePackages = new String[]{"com.wt.**.feign"};
 //        feignProperties.put("feign.basePackages", basePackages);
         //如果接入了Sentinel，则默认开启
-        if (ClassUtils.isPresent("com.alibaba.cloud.sentinel.custom.SentinelAutoConfiguration", null) && !environment.containsProperty("feign.http2.enabled"))
+        if (ClassUtils.isPresent("com.alibaba.cloud.sentinel.custom.SentinelAutoConfiguration", null))
             feignProperties.put("feign.sentinel.enabled", Boolean.TRUE);
         PropertiesPropertySource propertySource = new PropertiesPropertySource("feign", feignProperties);
         environment.getPropertySources().addFirst(propertySource);
