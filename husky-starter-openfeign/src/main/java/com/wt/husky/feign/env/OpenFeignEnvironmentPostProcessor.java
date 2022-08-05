@@ -12,7 +12,7 @@ import org.springframework.util.ClassUtils;
 import java.util.Properties;
 
 /**
- * 从Nacos中获取配置
+ * 环境配置
  *
  * @author qiyu
  * @date 2022/1/15
