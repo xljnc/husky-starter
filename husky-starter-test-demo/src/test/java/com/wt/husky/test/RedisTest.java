@@ -129,7 +129,15 @@ public class RedisTest {
     }
 
     @Test
-    public void testSetAdd() {
+    public void testSet() {
         redisUtil.addToSet("test-set", "a", "b");
+        Set<String> set = redisUtil.scanSet("test-set", null, 10);
+        System.out.println(set);
+        redisUtil.removeFromSet("test-set", "a", "b");
+        set = redisUtil.scanSet("test-set", null, 10);
+        System.out.println(set);
+        redisUtil.deleteKey("test-set");
+        redisUtil.removeFromSet("test-set", "a", "b");
+
     }
 }
