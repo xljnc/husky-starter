@@ -316,6 +316,28 @@ public class RedisUtil {
     }
 
     /**
+     * 加入到Set
+     *
+     * @param key    key
+     * @param values 对象
+     * @return java.lang.Long
+     */
+    public Long addToSet(String key, String... values) {
+        return stringRedisTemplate.opsForSet().add(key, values);
+    }
+
+    /**
+     * 从Set移除
+     *
+     * @param key    key
+     * @param values 对象
+     * @return java.lang.Long
+     */
+    public Long removeFromSet(String key, String... values) {
+        return stringRedisTemplate.opsForSet().remove(key, values);
+    }
+
+    /**
      * 扫描key
      *
      * @param key     key

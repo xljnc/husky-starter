@@ -10,5 +10,4 @@ include(':husky-starter-rpc')
 include(':husky-starter-web')
 include(':husky-starter-test-demo')
 //include 'husky-starter-javacv'
-include 'husky-starter-javacv'
 

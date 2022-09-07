@@ -127,4 +127,9 @@ public class RedisTest {
         System.out.println("distance:" + distance);
 
     }
+
+    @Test
+    public void testSetAdd() {
+        redisUtil.addToSet("test-set", "a", "b");
+    }
 }
