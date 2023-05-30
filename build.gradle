@@ -5,8 +5,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.6.3"
-        classpath "com.wt.test:gradle-springboot-plugin:1.0.0-SNAPSHOT"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:3.0.6"
+        classpath "com.wt.test:gradle-springboot-plugin:1.0.2-SNAPSHOT"
     }
 }
 
@@ -14,9 +14,9 @@ group 'com.wt.test'
 version '1.0.0-SNAPSHOT'
 
 ext {
-    springbootVersion = '2.6.3'
+    springbootVersion = '3.0.6'
+    sourceCompatibility = 17
     springcloudAlibabaVersion = '2021.1'
-    sourceCompatibility = 11
     jarArchiveClassifier = ''
     sourceJarArchiveClassifier = 'sources'
 }
@@ -26,6 +26,7 @@ apply plugin: "qiyuSpringBootPlugin"
 allprojects {
     dependencyManagement {
         dependencies {
+            dependency 'javax.annotation:javax.annotation-api:1.3.2'
             dependency 'org.bytedeco:ffmpeg-platform-gpl:5.0-1.5.7'
             dependency 'org.bytedeco:javacv-platform:1.5.7'
             dependency 'com.github.ben-manes.caffeine:caffeine:3.1.1'
